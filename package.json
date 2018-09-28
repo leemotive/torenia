@@ -1,0 +1,35 @@
+{
+  "name": "torenia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf es && babel ./components -d es && gulp less"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leemotive/torenia.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leemotive/torenia/issues"
+  },
+  "homepage": "https://github.com/leemotive/torenia#readme",
+  "dependencies": {
+    "decimal-format": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.1",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-export-default-from": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^8.0.0",
+    "gulp-cli": "^2.0.1",
+    "gulp-less": "^4.0.1"
+  }
+}
