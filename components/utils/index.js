@@ -1,2 +1,15 @@
-export { default as dictionary } from './dictionary';
-export { default as render } from './render';
+import dictionary from './dictionary';
+import render from './render';
+import request from './request';
+
+export {
+  dictionary,
+  render,
+  request,
+}
+
+export default {
+  dictionary,
+  render,
+  request,
+}

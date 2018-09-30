@@ -1,8 +1,7 @@
 import { Table as AntTable, Popconfirm } from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import { request } from 'utils';
+import { request } from '../utils';
 import Header from './Header';
 import Edit from './Edit';
 
@@ -18,6 +17,7 @@ const defaultPagination = {
 };
 
 class Table extends Component {
+  static getEditFormOption = Edit.buildFormOption
   static defaultProps = {
     pageKey: {
       limit: 'limit',
@@ -241,7 +241,7 @@ class Table extends Component {
   render() {
     const filterdColumns = this.resolveColumn();
     const {
-      className,
+      className = '',
       searchConfig,
       editConfig = {},
       checkColumnBehavior,
@@ -268,7 +268,7 @@ class Table extends Component {
     };
     editConfig.defaultValue = record;
     return (
-      <div className={classnames('table-wrap no-wrap-table', className)}>
+      <div className={`${className} table-wrap no-wrap-table`}>
         <Header tableOperation={tableOperation} noOperation={noOperation} columnCheckConfig={columnCheckConfig} searchConfig={searchConfig} />
         <AntTable
           columns={ filterdColumns }

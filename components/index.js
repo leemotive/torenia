@@ -1,7 +1,3 @@
-export { default as Form } from './Form';
-export { default as Table } from './Table';
-
-import * as utils from './utils';
-export {
-  utils
-}
+export { default as Form } from './form';
+export { default as Table } from './table';
+export { default as Utils } from './utils';

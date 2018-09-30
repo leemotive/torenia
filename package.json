@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf es && babel ./components -d es && gulp less"
+    "build": "rm -rf es lib dist && gulp entry && gulp build && gulp less"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,12 @@
   },
   "homepage": "https://github.com/leemotive/torenia#readme",
   "dependencies": {
-    "decimal-format": "^1.1.0"
+    "axios": "^0.18.0",
+    "decimal-format": "^1.1.0",
+    "jsonp": "^0.2.1",
+    "lodash.clonedeep": "^4.5.0",
+    "path-to-regexp": "^2.4.0",
+    "qs": "^6.5.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -27,9 +32,18 @@
     "@babel/plugin-proposal-export-default-from": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "antd": "^3.9.3",
+    "babel-loader": "^8.0.4",
+    "event-stream": "^4.0.1",
     "gulp": "^3.9.1",
     "gulp-babel": "^8.0.0",
     "gulp-cli": "^2.0.1",
-    "gulp-less": "^4.0.1"
+    "gulp-cssmin": "^0.2.0",
+    "gulp-less": "^4.0.1",
+    "gulp-rename": "^1.4.0",
+    "less-plugin-npm-import": "^2.1.0",
+    "node-dir": "^0.1.17",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
   }
 }

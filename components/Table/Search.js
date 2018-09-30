@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
-import Form from '../Form';
+import Form from '../form';
 
 class Search extends Component {
   onSubmit = (values) => {

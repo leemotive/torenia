@@ -1,7 +1,7 @@
-import Form from '../Form';
+import Form from '../form';
 import PropTypes from 'prop-types';
 import { Modal } from 'antd';
-import { request } from 'utils';
+import { request } from '../utils';
 import React, { Component } from 'react';
 
 class Edit extends Component {
