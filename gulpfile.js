@@ -9,7 +9,6 @@ const path = require('path');
 const glob = require('glob');
 const webpack = require('webpack');
 const es = require('event-stream');
-var NpmImportPlugin = require("less-plugin-npm-import");
 
 gulp.task('less:es', () => {
   const css = gulp.src('./components/**/index.less')
@@ -58,6 +57,7 @@ gulp.task('build:dist', ['less:dist'], () => {
     entry: './components/index.js',
     output: {
       filename: 'torenia.min.js',
+      library: 'torenia',
       path: path.resolve(__dirname, 'dist'),
     },
     module: {
@@ -128,7 +128,7 @@ function babelConfiguartion(modules) {
     ],
     plugins: [
       '@babel/plugin-proposal-class-properties',
-      '@babel/plugin-proposal-export-default-from'
+      '@babel/plugin-proposal-export-default-from',
     ]
   }
 }

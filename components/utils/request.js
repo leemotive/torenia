@@ -49,9 +49,6 @@ const fetch = (options) => {
         resolve({ statusText: 'OK', status: 200, data: result })
       })
     })
-  } else if (fetchType === 'YQL') {
-    url = `http://query.yahooapis.com/v1/public/yql?q=select * from json where url='${options.url}?${encodeURIComponent(qs.stringify(options.data))}'&format=json`
-    data = null
   }
 
   switch (method.toLowerCase()) {
@@ -80,8 +77,6 @@ function request (options) {
     if (window.location.origin !== origin) {
       if (CORS.indexOf(origin) > -1) {
         options.fetchType = 'CORS'
-      } else if (YQL && YQL.indexOf(origin) > -1) {
-        options.fetchType = 'YQL'
       } else {
         options.fetchType = 'JSONP'
       }
@@ -90,7 +85,7 @@ function request (options) {
 
   return fetch(options).then((response) => {
     const { statusText, status } = response
-    let data = options.fetchType === 'YQL' ? response.data.query.results.json : response.data
+    let data = response.data
     if (data instanceof Array) {
       data = {
         list: data,
