@@ -39,19 +39,19 @@ gulp.task('less:dist', () => {
 
 gulp.task('less', ['less:es', 'less:lib', 'less:dist']);
 
-gulp.task('build:es', ['less:es'], () => {
+gulp.task('build:es', () => {
   gulp.src(babelSrc)
     .pipe(babel(babelConfiguartion(false)))
     .pipe(gulp.dest('./es'));
 });
 
-gulp.task('build:lib', ['less:lib'], () => {
+gulp.task('build:lib', () => {
   gulp.src(babelSrc)
     .pipe(babel(babelConfiguartion('commonjs')))
     .pipe(gulp.dest('./lib'));
 });
 
-gulp.task('build:dist', ['less:dist'], () => {
+gulp.task('build:dist', () => {
   const compile = webpack({
     mode: 'production',
     entry: './components/index.js',
