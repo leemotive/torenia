@@ -8,6 +8,7 @@ class Edit extends Component {
   constructor(props, context) {
     super(props);
     this.key = context._t.key;
+    this.formRef = React.createRef();
   }
 
   static buildFormOption = (props, isEdit) => {
@@ -55,19 +56,14 @@ class Edit extends Component {
   }
 
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.visible ^ this.props.visible) {
-      this.reset = true;
-    }
+  shouldComponentUpdate(nextProps) {
     if (!nextProps.visible && !this.props.visible) {
       return false;
     }
     return true;
   }
-
-  componentDidUpdate() {
-    this.reset && this.form && setTimeout(() => this.form.resetFields(), 100);
-    this.reset = false;
+  resetFields = () => {
+    setTimeout(() => this.formRef.current.resetFields(), 100);
   }
 
   render() {
@@ -82,10 +78,11 @@ class Edit extends Component {
         title={this.isEdit ? '编辑' : '新增'}
         visible={visible}
         footer={null}
+        afterClose={this.resetFields}
         onCancel={() => this.context._t.hideEdit()}
       >
         <Form
-          ref={r => this.form = r}
+          ref={this.formRef}
           { ...formOption }
         />
       </Modal>

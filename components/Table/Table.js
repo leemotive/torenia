@@ -89,8 +89,8 @@ class Table extends Component {
       ...filterCondition,
       [pageKey.limit]: pageCondition.pageSize,
       [pageKey.skip]: (pageCondition.current - 1) * pageCondition.pageSize,
-      [pageKey.order]: sortCondition.field,
-      [pageKey.orderBy]: sortCondition.order,
+      [pageKey.order]: sortCondition.order && sortCondition.order.slice(0, -3),
+      [pageKey.orderBy]: sortCondition.field,
     };
     condition = beforeQuery(condition);
     let {data} = await request({
