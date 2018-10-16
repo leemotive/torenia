@@ -4,20 +4,14 @@ import PropTypes from 'prop-types';
 import { request } from '../utils';
 import Header from './Header';
 import Edit from './Edit';
+import options, { config as configTable } from './options';
 
 const noop = _ => _;
 
-const defaultPagination = {
-  showSizeChanger: true,
-  showQuickJumper: true,
-  showTotal: total => `共 ${total} 条`,
-  current: 1,
-  pageSize: 10,
-  total: 0,
-};
 
 class Table extends Component {
-  static getEditFormOption = Edit.buildFormOption
+  static getEditFormOption = Edit.buildFormOption;
+  static config = configTable;
   static defaultProps = {
     pageKey: {
       limit: 'limit',
@@ -54,7 +48,7 @@ class Table extends Component {
     this.state = {
       loading: false,
       dataSource,
-      pagination: { ...defaultPagination, ...pagination },
+      pagination: { ...options.defaultPagination, ...pagination },
       columns,
       checkedColumns: this.resolveDefaultCheckedColumns(),
     };
@@ -66,7 +60,7 @@ class Table extends Component {
     };
   }
   static childContextTypes = {
-    _t: PropTypes.object
+    _t: PropTypes.object,
   }
 
   async query(search, pagination, filters, sorter) {
@@ -93,11 +87,11 @@ class Table extends Component {
       [pageKey.orderBy]: sortCondition.field,
     };
     condition = beforeQuery(condition);
-    let {data} = await request({
-      url: `/api/v1/${this.resource}`,
+    let data = await request({
+      url: `${options.apiPrefix}/${this.resource}`,
       data: { ...condition }
     });
-    data = dataPreProcess(data);
+    data = dataPreProcess(options.globalDataPreProcess(data));
     this.setState({
       loading: false,
       dataSource: data.data || data.list,
@@ -182,7 +176,7 @@ class Table extends Component {
             key="delete"
             title="确认删除？"
             onConfirm={() => {
-              request({method: 'delete', url: `/api/v1/${this.resource}/${record[this.key]}`}).then(data => {
+              request({method: 'delete', url: `${options.apiPrefix}/${this.resource}/${record[this.key]}`}).then(data => {
                 this.query();
               })
             }}
@@ -197,6 +191,7 @@ class Table extends Component {
   resolveRowOperation() {
     const {
       rowOperation,
+      rowOperationProps,
     } = this.props;
     return {
       title: '操作',
@@ -224,7 +219,8 @@ class Table extends Component {
           ops = this.defaultOperation(['edit', 'delete'].filter(ac => this.props[`no${ac[0].toUpperCase()}${ac.slice(1)}`] !== true), text, record);
         }
         return <div className="rowOperations">{ops}</div>
-      }
+      },
+      ...rowOperationProps,
     };
   }
   componentDidMount() {

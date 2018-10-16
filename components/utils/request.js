@@ -46,7 +46,7 @@ const fetch = (options) => {
         if (error) {
           reject(error)
         }
-        resolve({ statusText: 'OK', status: 200, data: result })
+        resolve(result);
       })
     })
   }
@@ -83,41 +83,12 @@ function request (options) {
     }
   }
 
-  return fetch(options).then((response) => {
-    const { statusText, status } = response
-    let data = response.data
-    if (data instanceof Array) {
-      data = {
-        list: data,
-      }
-    }
-    return Promise.resolve({
-      success: true,
-      message: statusText,
-      statusCode: status,
-      ...data,
-    })
-  }).catch((error) => {
-    const { response } = error
-    let msg
-    let statusCode
-    if (response && response instanceof Object) {
-      const { data, statusText } = response
-      statusCode = response.status
-      msg = data.message || statusText
-    } else {
-      statusCode = 600
-      msg = error.message || 'Network Error'
-    }
-
-    /* eslint-disable */
-    return Promise.reject({ success: false, statusCode, message: msg })
-  })
+  return fetch(options);
 }
 
 
 export default request;
-
+request.axios = axios;
 request.cors = function(...args) {
   if (!CORS.length) {
     CORS.push(...args);

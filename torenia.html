@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.5.4/antd.css" rel="stylesheet">
+  <link href="./dist/torenia.min.css" >
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.4.0/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.4.0/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.1/prop-types.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/3.5.4/antd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.0.0-beta.49/polyfill.js"></script>
+
+  <script src="./dist/torenia.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.0.0-beta.3/babel.js"></script>
+</head>
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const formConfig = {
+      fields: [
+        { label: '姓名', name: 'name', widget: 'Input' },
+        { label: '生日', name: 'birthday', widget: 'DatePicker' }
+      ]
+    }
+
+    ReactDOM.render(<torenia.Form
+      { ...formConfig }
+    />, document.getElementById('root'));
+
+  </script>
+</body>
+</html>

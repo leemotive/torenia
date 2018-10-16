@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 import { request } from '../utils';
 import React, { Component } from 'react';
+import options from './options';
 
 class Edit extends Component {
   constructor(props, context) {
@@ -47,7 +48,7 @@ class Edit extends Component {
     const idUrl = id ? `/${id}` : '';
 
     return request({
-      url: `/api/v1/${this.context._t.resource}${idUrl}`,
+      url: `${options.apiPrefix}${this.context._t.resource}${idUrl}`,
       method: id ? 'PUT' : 'POST',
       data: values
     }).then(_ => {

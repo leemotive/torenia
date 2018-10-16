@@ -91,8 +91,46 @@ class Form extends Component {
     return items;
   }
 
+  getBtn(name) {
+    if ('submit' === name) {
+      return <Button type="primary" key="torenia.form.submit" className="form-submit-btn" htmlType="submit" style={{marginRight: 10}}>{this.props.submitText}</Button>;
+    } else if ('reset' === name) {
+      return <Button type="default" key="torenia.form.reset" className="form-submit-reset" onClick={this.reset}>{this.props.resetText}</Button>;
+    }
+    return null;
+  }
+
+  renderOp() {
+    let {
+      children
+    } = this.props;
+
+
+    if (!React.Children.count(children)) {
+      return [
+        this.submitBtn,
+        this.resetBtn,
+      ];
+    }
+
+    if ('function' === typeof children) {
+      children = children(this);
+    }
+
+    return React.Children.map(children, child => {
+      if ('string' === typeof child) {
+        child = this.getBtn(child);
+      }
+      return React.cloneElement(child, { key: child.key || index });
+    });
+  }
+
+
   render() {
-    const { layout = 'horizontal', className = '', itemLayout: { labelCol } = {}, onSubmit } = this.props;
+    const {
+      layout = 'horizontal',
+      className = '',
+    } = this.props;
 
     return (
       <AntForm
@@ -101,20 +139,20 @@ class Form extends Component {
         className={className}
       >
         {this.resolveFormItem()}
-        {onSubmit ? <FormItem style={{verticalAlign: 'middle'}}>
-          <Row>
-            <Col {...labelCol}></Col>
-            <Col>
-              <Button type="primary" htmlType="submit" style={{marginRight: 10}}>提交</Button>
-              <Button type="default" onClick={this.reset}>重置</Button>
-            </Col>
-          </Row>
-        </FormItem> : null}
+
+        {this.renderOp()}
+
       </AntForm>
     )
 
   }
 }
 Form.Item = FormItem;
+
+Form.defaultProps = {
+  submitText: '提交',
+  resetText: '重置',
+  onSubmit: () => {}
+}
 
 export default AntForm.create()(Form);

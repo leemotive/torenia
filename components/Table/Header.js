@@ -31,7 +31,7 @@ class Header extends Component {
         }
       })
     } else {
-      return this.defaultTableOperation(['create', 'columnCheck'].filter(ac => noOperation[`no${ac[0].toUpperCase()}${ac.slice(1)}`] !== true))
+      return this.defaultTableOperation(['create', 'refresh', 'columnCheck'].filter(ac => noOperation[`no${ac[0].toUpperCase()}${ac.slice(1)}`] !== true))
     }
   }
 
@@ -46,6 +46,14 @@ class Header extends Component {
             this.context._t.showEdit({});
           }}>
             <Icon type="plus" />
+          </Button>
+        )
+      } else if ('refresh' === operation) {
+        return (
+          <Button key="@table/sync" className="tableActionButton" onClick={() => {
+            this.context._t.query({});
+          }}>
+            <Icon type="sync" />
           </Button>
         )
       }
