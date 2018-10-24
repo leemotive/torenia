@@ -48,7 +48,7 @@ class Edit extends Component {
     const idUrl = id ? `/${id}` : '';
 
     return request({
-      url: `${options.apiPrefix}${this.context._t.resource}${idUrl}`,
+      url: `${options.apiPrefix}/${this.context._t.resource}${idUrl}`,
       method: id ? 'PUT' : 'POST',
       data: values
     }).then(_ => {

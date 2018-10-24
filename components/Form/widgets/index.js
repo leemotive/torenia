@@ -8,6 +8,7 @@ import Cascader, { Address } from './Cascader';
 import Transfer from './Transfer';
 import Slider from './Slider';
 import Switch from './Switch';
+import Password from './Password';
 
 const Widgets = {
   Input,
@@ -22,6 +23,7 @@ const Widgets = {
   Transfer,
   Slider,
   Switch,
+  Password,
 };
 
 export default Widgets;
@@ -29,4 +31,11 @@ export default Widgets;
 export const resolveWidget = (widgetName) => {
   const names = widgetName.split('.');
   return names.reduce((last, name) => last[name], Widgets);
+}
+
+export const registerFormWidget = function(name, widget) {
+  if (Widgets[name]) {
+    return;
+  }
+  Widgets[name] = widget;
 }

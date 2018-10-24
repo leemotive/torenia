@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Form as AntForm, Button, Row, Col } from 'antd';
-import { resolveWidget } from './widgets';
+import { resolveWidget, registerFormWidget } from './widgets';
 const FormItem  = AntForm.Item;
 
 const noop = _ => _;
@@ -108,8 +108,8 @@ class Form extends Component {
 
     if (!React.Children.count(children)) {
       return [
-        this.submitBtn,
-        this.resetBtn,
+        this.getBtn('submit'),
+        this.getBtn('reset'),
       ];
     }
 
@@ -128,8 +128,9 @@ class Form extends Component {
 
   render() {
     const {
-      layout = 'horizontal',
-      className = '',
+      layout,
+      className,
+      opProps
     } = this.props;
 
     return (
@@ -140,7 +141,7 @@ class Form extends Component {
       >
         {this.resolveFormItem()}
 
-        {this.renderOp()}
+        <FormItem { ...opProps }>{this.renderOp()}</FormItem>
 
       </AntForm>
     )
@@ -149,9 +150,16 @@ class Form extends Component {
 }
 Form.Item = FormItem;
 
+Form.registerFormWidget = registerFormWidget;
+
 Form.defaultProps = {
   submitText: '提交',
   resetText: '重置',
+  layout: 'horizontal',
+  className: '',
+  opProps: {
+    wrapperCol: { offset: 5 }
+  },
   onSubmit: () => {}
 }
 
