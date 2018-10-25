@@ -25,6 +25,7 @@ class Table extends Component {
     noRowOperation: false,
     editText: '编辑',
     deleteText: '删除',
+    noPagination: false,
   }
   constructor(props) {
     super(props);
@@ -245,6 +246,8 @@ class Table extends Component {
       tableOperation,
       noCreate,
       noColumnCheck,
+      noRefresh,
+      noPagination,
     } = this.props;
     const {
       dataSource,
@@ -254,7 +257,7 @@ class Table extends Component {
     } = this.state;
 
     const noOperation = {
-      noColumnCheck, noCreate
+      noColumnCheck, noCreate, noRefresh
     };
 
     const columnCheckConfig = {
@@ -270,7 +273,7 @@ class Table extends Component {
           columns={ filterdColumns }
           dataSource={ dataSource }
           rowKey={ this.key }
-          pagination={ pagination }
+          pagination={ !noPagination && pagination }
           onChange={ this.onConditionChange }
           scroll={{ x: true }}
         />

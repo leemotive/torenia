@@ -17,6 +17,9 @@ class Search extends Component {
         layout="inline"
         className="searchForm"
         onSubmit={this.onSubmit}
+        opProps={{
+          wrapperCol: { offset: 0 }
+        }}
       />
     )
   }

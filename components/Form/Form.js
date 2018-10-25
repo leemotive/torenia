@@ -102,9 +102,9 @@ class Form extends Component {
 
   renderOp() {
     let {
-      children
+      children, opBtn
     } = this.props;
-
+    children = opBtn || children;
 
     if (!React.Children.count(children)) {
       return [
