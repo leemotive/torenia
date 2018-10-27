@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Form as AntForm, Button, Row, Col } from 'antd';
-import { resolveWidget, registerFormWidget } from './widgets';
-const FormItem  = AntForm.Item;
+import { registerFormWidget } from './widgets';
+import Field from './Field';
 
-const noop = _ => _;
+const FormItem  = AntForm.Item;
 
 class Form extends Component {
   constructor(props) {
@@ -35,7 +35,21 @@ class Form extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    return { fields: nextProps.fields };
+    const {
+      fields,
+      defaultValue,
+      itemLayout,
+    } = nextProps;
+
+    for(let field of fields) {
+      const { name } = field;
+      if (typeof field.widget !== 'function') {
+        field.defaultValue = defaultValue[name];
+        field.itemProps = { ...field.itemProps, ...itemLayout, ...field.layout };
+      }
+    }
+
+    return { fields };
   }
 
   resolveFormItem() {
@@ -43,55 +57,34 @@ class Form extends Component {
       fields,
     } = this.state;
     const {
-      defaultValue = {},
-      form: {
-        getFieldDecorator
-      },
-      itemLayout,
+      form
     } = this.props;
 
     const items = [];
     for(let field of fields) {
-      if (typeof field === 'function') {
-        const widget = field(this.props);
-        items.push(React.cloneElement(widget, { key: items.length }));
+      if (typeof field.widget === 'function') {
+        const widget = field.widget(this.props);
+        items.push(React.cloneElement(widget, { key: field.key || items.length }));
       } else {
-        const Widget = resolveWidget(field.widget || 'Input');
-        const {
-          label, name, layout, itemOption, getValueFromEvent, decoratorOption, ...others
-        } = field;
-        const itemProps = {
-          key: items.length,
-          ...itemOption,
-        };
-        if (label) {
-          itemProps.label = label;
-        }
-        const decorator = {
-          initialValue: (Widget.transform || noop)(defaultValue[name]),
-          ...decoratorOption,
-        };
-        if (Widget.valuePropName) {
-          decorator.valuePropName = Widget.valuePropName;
-        }
-        if (getValueFromEvent) {
-          decorator.getValueFromEvent = getValueFromEvent;
-        }
-        items.push(
-          <FormItem { ...itemProps } { ...{...itemLayout, ...layout} }>
-            {getFieldDecorator(name, {
-              ...decorator
-            })(
-              <Widget { ...others } />
-            )}
-          </FormItem>
-        )
+        field.key || (field.key = items.length);
+        items.push(<Field { ...field } form={form} />);
       }
     }
     return items;
   }
 
-  getBtn(name) {
+  resolveWidget = (name) => {
+    const {
+      fields,
+    } = this.state;
+    const {
+      form
+    } = this.props;
+    const field = fields.find(field => field.name === name);
+    return <Field { ...field } form={form} />;
+  }
+
+  getBtn = (name) => {
     if ('submit' === name) {
       return <Button type="primary" key="torenia.form.submit" className="form-submit-btn" htmlType="submit" style={{marginRight: 10}}>{this.props.submitText}</Button>;
     } else if ('reset' === name) {
@@ -125,12 +118,27 @@ class Form extends Component {
     });
   }
 
+  renderForm() {
+    const {
+      children,
+      opProps,
+    } = this.props;
+    opProps.key || (opProps.key = '@form.op');
+
+    if ('function' === typeof children) {
+      return children(this.resolveWidget, this.getBtn);
+    } else {
+      return [
+        this.resolveFormItem(),
+        <FormItem { ...opProps } >{this.renderOp()}</FormItem>
+      ]
+    }
+  }
 
   render() {
     const {
       layout,
       className,
-      opProps
     } = this.props;
 
     return (
@@ -139,10 +147,7 @@ class Form extends Component {
         layout={layout}
         className={className}
       >
-        {this.resolveFormItem()}
-
-        <FormItem { ...opProps }>{this.renderOp()}</FormItem>
-
+        { this.renderForm() }
       </AntForm>
     )
 
@@ -157,6 +162,7 @@ Form.defaultProps = {
   resetText: '重置',
   layout: 'horizontal',
   className: '',
+  defaultValue: {},
   opProps: {
     wrapperCol: { offset: 5 }
   },

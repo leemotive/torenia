@@ -63,9 +63,6 @@ class Edit extends Component {
     }
     return true;
   }
-  resetFields = () => {
-    setTimeout(() => this.formRef.current.resetFields(), 100);
-  }
 
   render() {
     const {
@@ -79,7 +76,7 @@ class Edit extends Component {
         title={this.isEdit ? '编辑' : '新增'}
         visible={visible}
         footer={null}
-        afterClose={this.resetFields}
+        destroyOnClose={true}
         onCancel={() => this.context._t.hideEdit()}
       >
         <Form
