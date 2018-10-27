@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Button, Icon } from 'antd';
+import { Row, Col, Button, Icon, Tooltip } from 'antd';
 import ColumnCheck from './ColumnCheck';
 import Search from './Search';
 
@@ -39,22 +39,28 @@ class Header extends Component {
     const { columnCheckConfig } = this.props;
     return operations.map(operation => {
       if ('columnCheck' === operation) {
-        return <ColumnCheck key="@table/columnCheck" { ...columnCheckConfig } />;
+        return (
+            <ColumnCheck key="@table/columnCheck" {...columnCheckConfig} />
+        )
       } else if ('create' === operation) {
         return (
-          <Button key="@table/add" className="tableActionButton" onClick={() => {
-            this.context._t.showEdit({});
-          }}>
-            <Icon type="plus" />
-          </Button>
+          <Tooltip key="@table/add" title="创建">
+            <Button className="tableActionButton" onClick={() => {
+              this.context._t.showEdit({});
+            }}>
+              <Icon type="plus" />
+            </Button>
+          </Tooltip>
         )
       } else if ('refresh' === operation) {
         return (
-          <Button key="@table/sync" className="tableActionButton" onClick={() => {
-            this.context._t.query({});
-          }}>
-            <Icon type="sync" />
-          </Button>
+          <Tooltip key="@table/sync" title="刷新">
+            <Button className="tableActionButton" onClick={() => {
+              this.context._t.query({});
+            }}>
+              <Icon type="sync" />
+            </Button>
+          </Tooltip>
         )
       }
     });
@@ -64,7 +70,7 @@ class Header extends Component {
     const { searchConfig: formOption } = this.props;
 
     return (
-      <div style={{marginBottom: 10}}>
+      <div style={{ marginBottom: 10 }}>
         <Row className="headerRow">
           <Col className="flexCol">
             <Search formOption={formOption} />

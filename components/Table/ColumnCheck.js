@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, Button, Icon, Popover } from 'antd';
+import { Checkbox, Button, Icon, Popover, Tooltip } from 'antd';
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -30,9 +30,11 @@ const ColumnCheck = (props, context) => {
 
   return (
     <Popover placement="bottomRight" overlayClassName="groupCheckPopover" content={popOverContent} title={`勾选列${checkColumnBehavior === 'visible' ? '显示' : '隐藏'}`} trigger="click">
+      <Tooltip  title={`勾选${checkColumnBehavior === 'hidden' ? '隐藏' : '显示'}列`}>
       <Button className="tableActionButton">
         <Icon type="bars" />
       </Button>
+      </Tooltip>
     </Popover>
   );
 }

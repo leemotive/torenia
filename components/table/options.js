@@ -5,6 +5,7 @@ let options = {
   defaultPagination: {
     showSizeChanger: true,
     showQuickJumper: true,
+    pageSizeOptions: ['10', '20', '50', '100'],
     showTotal: total => `共 ${total} 条`,
     current: 1,
     pageSize: 10,
