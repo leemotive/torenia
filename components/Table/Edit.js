@@ -44,8 +44,14 @@ class Edit extends Component {
     this.isEdit = this.id !== undefined;
   }
   onSubmit = (values) => {
+    const { beforeSave } = this.props;
     const id = this.isEdit ? this.id : undefined;
     const idUrl = id ? `/${id}` : '';
+
+    values = beforeSave(values);
+    if (!values) {
+      return;
+    }
 
     return request({
       url: `${options.apiPrefix}/${this.context._t.resource}${idUrl}`,

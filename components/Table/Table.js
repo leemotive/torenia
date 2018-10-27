@@ -20,12 +20,14 @@ class Table extends Component {
       orderBy: 'orderBy'
     },
     beforeQuery: noop,
+    beforeSave: noop,
     dataPreProcess: noop,
     checkColumnBehavior: 'visible',
     noRowOperation: false,
     editText: '编辑',
     deleteText: '删除',
     noPagination: false,
+    autoQuery: true,
   }
   constructor(props) {
     super(props);
@@ -88,6 +90,12 @@ class Table extends Component {
       [pageKey.orderBy]: sortCondition.field,
     };
     condition = beforeQuery(condition);
+    if (!condition) {
+      this.setState({
+        loading: false,
+      });
+      return;
+    }
     let data = await request({
       url: `${options.apiPrefix}/${this.resource}`,
       data: { ...condition }
@@ -226,7 +234,8 @@ class Table extends Component {
   }
   componentDidMount() {
     const { dataSource } = this.state;
-    if (!dataSource) {
+    const { autoQuery } = this.props;
+    if (!dataSource && autoQuery) {
       this.query();
     }
   }
@@ -248,6 +257,7 @@ class Table extends Component {
       noColumnCheck,
       noRefresh,
       noPagination,
+      beforeSave,
     } = this.props;
     const {
       dataSource,
@@ -277,7 +287,7 @@ class Table extends Component {
           onChange={ this.onConditionChange }
           scroll={{ x: true }}
         />
-        <Edit visible={editVisible} columns={columns} editConfig={editConfig} />
+        <Edit visible={editVisible} columns={columns} editConfig={editConfig} beforeSave={beforeSave} />
       </div>
     );
   }
