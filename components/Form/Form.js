@@ -27,11 +27,13 @@ class Form extends Component {
   reset = (e) => {
     e && e.preventDefault();
     const {
+      onReset,
       form: {
         resetFields
       }
     } = this.props;
     resetFields();
+    onReset();
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -166,7 +168,8 @@ Form.defaultProps = {
   opProps: {
     wrapperCol: { offset: 5 }
   },
-  onSubmit: () => {}
+  onSubmit: () => {},
+  onReset: () => {},
 }
 
 export default AntForm.create()(Form);

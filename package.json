@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/leemotive/torenia#readme",
   "dependencies": {
+    "antd": "^3.10.3",
     "axios": "^0.18.0",
     "decimal-format": "^1.1.0",
     "jsonp": "^0.2.1",
@@ -32,7 +33,6 @@
     "@babel/plugin-proposal-export-default-from": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
-    "antd": "^3.9.3",
     "babel-loader": "^8.0.4",
     "event-stream": "^4.0.1",
     "gulp": "^3.9.1",

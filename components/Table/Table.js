@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { request } from '../utils';
 import Header from './Header';
 import Edit from './Edit';
+import Form from '../form';
 import options, { config as configTable } from './options';
 
 const noop = _ => _;
@@ -72,7 +73,7 @@ class Table extends Component {
     const searchCondition = { ...state.search, ...search };
     const pageCondition = { ...state.pagination, ...pagination };
     const filterCondition = { ...state.filters, ...filters };
-    const sortCondition = { ...state.sorter, ...sorter };
+    const sortCondition = sorter || { ...state.sorter };
 
     this.setState({
       loading: true,
@@ -131,6 +132,33 @@ class Table extends Component {
         this.operationFormProps = true;
       }
       if (column.alwaysHide) return false;
+
+      if (column.filter && !column.filterDropdown) {
+        column.filterDropdown = ({ confirm, setSelectedKeys }) => {
+          const formConfig = {
+            fields: [
+              { name: column.dataIndex }
+            ],
+            onSubmit: formData => {
+              setSelectedKeys(formData[column.dataIndex]);
+              confirm();
+            },
+            onReset: () => {
+              setSelectedKeys(undefined);
+              confirm();
+            },
+            layout: 'inline',
+            opProps: {
+              wrapperCol: { offset: 0 }
+            },
+            submitText: '确定',
+            resetText: '清空',
+            className: 'table-filter-dropdown',
+          }
+          return <Form { ...formConfig } />
+        }
+      }
+
       if (column.alwaysShow) return true;
       const checked = !checkedColumns || checkedColumns.includes(column.dataIndex);
       return !(checked ^ checkColumnBehavior === 'visible');
