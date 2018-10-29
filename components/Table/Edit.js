@@ -8,7 +8,7 @@ import options from './options';
 class Edit extends Component {
   constructor(props, context) {
     super(props);
-    this.key = context._t.key;
+    this.rowKey = context._t.props.rowKey;
     this.formRef = React.createRef();
   }
 
@@ -40,7 +40,7 @@ class Edit extends Component {
   }
   buildModalInfo() {
     const { editConfig: { defaultValue = {} } } = this.props;
-    this.id = defaultValue[this.key];
+    this.id = defaultValue[this.rowKey];
     this.isEdit = this.id !== undefined;
   }
   onSubmit = (values) => {

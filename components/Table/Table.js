@@ -9,7 +9,6 @@ import options, { config as configTable } from './options';
 
 const noop = _ => _;
 
-
 class Table extends Component {
   static getEditFormOption = Edit.buildFormOption;
   static config = configTable;
@@ -20,6 +19,7 @@ class Table extends Component {
       order: 'order',
       orderBy: 'orderBy'
     },
+    className: '',
     beforeQuery: noop,
     beforeSave: noop,
     dataPreProcess: noop,
@@ -29,6 +29,12 @@ class Table extends Component {
     deleteText: '删除',
     noPagination: false,
     autoQuery: true,
+    rowKey: 'id',
+    locale: {
+      filterConfirm: '确定',
+      filterReset: '清空',
+      empty: '暂无数据'
+    }
   }
   constructor(props) {
     super(props);
@@ -39,14 +45,12 @@ class Table extends Component {
       dataSource,
       pagination,
       columns,
-      key = 'id',
       noCreate,
     } = props;
 
     if (!api && !resource && !dataSource) {
       throw '错误使用, api, resource, dataSource至少使用一个';
     }
-    this.key = key;
     this.resource = resource;
 
     this.state = {
@@ -121,7 +125,7 @@ class Table extends Component {
   }
   resolveColumn() {
     const {
-      checkColumnBehavior, noRowOperation
+      checkColumnBehavior, noRowOperation, locale
     } = this.props;
     const {
       checkedColumns,
@@ -151,8 +155,8 @@ class Table extends Component {
             opProps: {
               wrapperCol: { offset: 0 }
             },
-            submitText: '确定',
-            resetText: '清空',
+            submitText: locale.filterConfirm,
+            resetText: locale.filterReset,
             className: 'table-filter-dropdown',
           }
           return <Form { ...formConfig } />
@@ -203,7 +207,7 @@ class Table extends Component {
   }
   defaultOperation(types, text, record) {
     let operations = [];
-    const { editText, deleteText } = this.props;
+    const { editText, deleteText, rowKey } = this.props;
     for(let type of types) {
       if ('edit' === type) {
         operations.push(<a key="edit" className="op-btn" onClick={() => this.showEdit(record)}>{editText}</a>);
@@ -213,7 +217,7 @@ class Table extends Component {
             key="delete"
             title="确认删除？"
             onConfirm={() => {
-              request({method: 'delete', url: `${options.apiPrefix}/${this.resource}/${record[this.key]}`}).then(data => {
+              request({method: 'delete', url: `${options.apiPrefix}/${this.resource}/${record[rowKey]}`}).then(data => {
                 this.query();
               })
             }}
@@ -275,7 +279,7 @@ class Table extends Component {
   render() {
     const filterdColumns = this.resolveColumn();
     const {
-      className = '',
+      className,
       searchConfig,
       editConfig = {},
       checkColumnBehavior,
@@ -286,6 +290,7 @@ class Table extends Component {
       noRefresh,
       noPagination,
       beforeSave,
+      ...others
     } = this.props;
     const {
       dataSource,
@@ -310,10 +315,10 @@ class Table extends Component {
         <AntTable
           columns={ filterdColumns }
           dataSource={ dataSource }
-          rowKey={ this.key }
           pagination={ !noPagination && pagination }
           onChange={ this.onConditionChange }
           scroll={{ x: true }}
+          { ...others }
         />
         <Edit visible={editVisible} columns={columns} editConfig={editConfig} beforeSave={beforeSave} />
       </div>
