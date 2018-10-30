@@ -13,29 +13,44 @@ class Edit extends Component {
   }
 
   static buildFormOption = (props, isEdit) => {
-    const {
+    let {
       columns,
-      editConfig: { fields: fieldOption = {}, ...others },
+      editConfig: { fields: extraFields = [], ...others },
     } = props;
     const itemLayout = {
       labelCol: { span: 5 },
       wrapperCol: { span: 15 },
-    }
-    const fields = columns.filter(col => {
-      const { formOption: { noCreate, noEdit } = {} } = col;
-      const noCE = isEdit ? noEdit : noCreate;
-      return col.type !== 'operation'
-        && !col.dataIndex.startsWith('@')
-        && !noCE
-    }).map(col => {
-      const { title, dataIndex, formOption: { noCreate, noEdit, ...others } = {} } = col;
-      return {
+    };
+
+    const extraFieldsMap = {};
+    extraFields.forEach(field => {
+      extraFieldsMap[field.name] = field;
+    });
+
+    let fields = columns.map(col => {
+      const { dataIndex, title, formOption } = col;
+      let newCol = {
         label: title,
         name: dataIndex,
-        ...others,
-        ...fieldOption[dataIndex]
+        ...formOption,
       };
+      if (!dataIndex) {
+        return newCol;
+      }
+      const extraField = extraFieldsMap[dataIndex];
+      delete extraFieldsMap[dataIndex];
+      return {
+        ...newCol,
+        ...extraField,
+      };
+    }).concat(Object.values(extraFieldsMap)).filter(col => {
+      const { noCreate, noEdit } = col;
+      const noCE = isEdit ? noEdit : noCreate;
+      return col.type !== 'operation'
+        && !col.name.startsWith('@')
+        && !noCE
     });
+
     return { fields, itemLayout, ...others };
   }
   buildModalInfo() {
@@ -75,11 +90,16 @@ class Edit extends Component {
       visible
     } = this.props;
     this.buildModalInfo();
-    const formOption = { ...Edit.buildFormOption(this.props, this.isEdit), onSubmit: this.onSubmit };
+    const {
+      render,
+      editTitle = '编辑',
+      createTitle = '新增',
+      ...formOption
+    } = { ...Edit.buildFormOption(this.props, this.isEdit), onSubmit: this.onSubmit };
 
     return (
       <Modal
-        title={this.isEdit ? '编辑' : '新增'}
+        title={this.isEdit ? editTitle : createTitle}
         visible={visible}
         footer={null}
         destroyOnClose={true}
@@ -88,7 +108,7 @@ class Edit extends Component {
         <Form
           ref={this.formRef}
           { ...formOption }
-        />
+        >{render || null}</Form>
       </Modal>
     )
   }

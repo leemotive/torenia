@@ -17,14 +17,14 @@ const render = {
       if (Array.isArray(dic)) {
         tag = dic.find(item => item.value === text)
       } else {
-        for (let [title, item] of Object.entries(dic)) {
+        for (let [label, item] of Object.entries(dic)) {
           if (item.value === text) {
-            tag = { ...item, title };
+            tag = { ...item, label };
             break;
           }
         }
       }
-      return <Tag color={tag.color}>{tag.title}</Tag>
+      return <Tag color={tag.color}>{tag.label}</Tag>
     }
   },
   moment(format = 'YYYY-MM-DD HH:mm:ss') {

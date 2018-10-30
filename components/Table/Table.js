@@ -27,6 +27,7 @@ class Table extends Component {
     noRowOperation: false,
     editText: '编辑',
     deleteText: '删除',
+    deleteTip: '确认删除',
     noPagination: false,
     autoQuery: true,
     rowKey: 'id',
@@ -137,29 +138,34 @@ class Table extends Component {
       }
       if (column.alwaysHide) return false;
 
-      if (column.filter && !column.filterDropdown) {
-        column.filterDropdown = ({ confirm, setSelectedKeys }) => {
-          const formConfig = {
-            fields: [
-              { name: column.dataIndex }
-            ],
-            onSubmit: formData => {
-              setSelectedKeys(formData[column.dataIndex]);
-              confirm();
-            },
-            onReset: () => {
-              setSelectedKeys(undefined);
-              confirm();
-            },
-            layout: 'inline',
-            opProps: {
-              wrapperCol: { offset: 0 }
-            },
-            submitText: locale.filterConfirm,
-            resetText: locale.filterReset,
-            className: 'table-filter-dropdown',
+      if (column.filter) {
+        const { formOption = {} } = column;
+        if (formOption.options) {
+          column.filters || (column.filters = formOption.options.map(o => ({ text: o.label, value: o.value })));
+        } else if (!column.filterDropdown) {
+          column.filterDropdown = ({ confirm, setSelectedKeys }) => {
+            const formConfig = {
+              fields: [
+                { name: column.dataIndex }
+              ],
+              onSubmit: formData => {
+                setSelectedKeys(formData[column.dataIndex]);
+                confirm();
+              },
+              onReset: () => {
+                setSelectedKeys(undefined);
+                confirm();
+              },
+              layout: 'inline',
+              opProps: {
+                wrapperCol: { offset: 0 }
+              },
+              submitText: locale.filterConfirm,
+              resetText: locale.filterReset,
+              className: 'table-filter-dropdown',
+            }
+            return <Form { ...formConfig } />
           }
-          return <Form { ...formConfig } />
         }
       }
 
@@ -207,7 +213,7 @@ class Table extends Component {
   }
   defaultOperation(types, text, record) {
     let operations = [];
-    const { editText, deleteText, rowKey } = this.props;
+    const { editText, deleteText, deleteTip, rowKey } = this.props;
     for(let type of types) {
       if ('edit' === type) {
         operations.push(<a key="edit" className="op-btn" onClick={() => this.showEdit(record)}>{editText}</a>);
@@ -215,7 +221,7 @@ class Table extends Component {
         operations.push(
           <Popconfirm
             key="delete"
-            title="确认删除？"
+            title={`${deleteTip}?`}
             onConfirm={() => {
               request({method: 'delete', url: `${options.apiPrefix}/${this.resource}/${record[rowKey]}`}).then(data => {
                 this.query();

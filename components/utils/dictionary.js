@@ -13,32 +13,32 @@ class Dictionary {
       return last[key];
     }, this.dics);
   }
-  getValue(name, title) {
+  getValue(name, label) {
     const names = name.split('.');
     const data = names.reduce((last, key) => {
       return key ? last[key] : last;
     }, this.dics);
 
-    if (title == undefined) {
+    if (label == undefined) {
       return data;
     }
 
     if (Array.isArray(data)) {
-      return (data.find(item => item.title === title) || {}).value
-    } else if (typeof data[title] !== 'object') {
-      return data[title];
+      return (data.find(item => item.label === label) || {}).value
+    } else if (typeof data[label] !== 'object') {
+      return data[label];
     } else {
-      return data[title].value;
+      return data[label].value;
     }
   }
-  getTitle(name, value) {
+  getLabel(name, value) {
     const names = name.split('.');
     const data = names.reduce((last, key) => {
       return key ? last[key] : last;
     }, this.dics);
 
     if (Array.isArray(data)) {
-      return (data.find(item => item.value === value) || {}).title;
+      return (data.find(item => item.value === value) || {}).label;
     } else {
       return (Object.entries(data).find(item => {
         if (typeof item[1] !== 'object') {
@@ -49,7 +49,7 @@ class Dictionary {
       }) || [])[0];
     }
   }
-  getOption(name, reverse) {
+  getOptions(name, reverse, filter = {}, extra = {}) {
     const names = name.split('.');
     const data = names.reduce((last, key) => {
       return key ? last[key] : last;
@@ -57,10 +57,22 @@ class Dictionary {
 
     let options;
     if (Array.isArray(data)) {
-      options = data.map(item => ({ label: item.title, value: item.value }));
+      options = data.map(item => ({ label: item.label, value: item.value }));
     } else {
       options = Object.entries(data).map(item => ({ label: item[0], value:item[1] }));
     }
+    if (Array.isArray(extra.prepend)) {
+      options.unshift(...extra.prepend);
+    }
+    if (Array.isArray(extra.append)) {
+      options.push(...extra.append);
+    }
+
+    if (Array.isArray(filter.label) || Array.isArray(filter.value)) {
+      const { label = [], value = [] } = filter;
+      options = options.filter(item => !label.includes(item.label) && !value.includes(item.value));
+    }
+
     if (reverse) {
       options = options.map(item => ({ label: item.value, value: item.label }));
     }
