@@ -105,7 +105,7 @@ class Form extends Component {
       return [
         this.getBtn('submit'),
         this.getBtn('reset'),
-      ];
+      ].filter(_ => _);
     }
 
     if ('function' === typeof children) {
@@ -124,6 +124,7 @@ class Form extends Component {
     const {
       children,
       opProps,
+      opBtn,
     } = this.props;
     opProps.key || (opProps.key = '@form.op');
 
@@ -132,7 +133,7 @@ class Form extends Component {
     } else {
       return [
         this.resolveFormItem(),
-        <FormItem { ...opProps } >{this.renderOp()}</FormItem>
+        opBtn === false ? null : <FormItem { ...opProps } >{this.renderOp()}</FormItem>
       ]
     }
   }

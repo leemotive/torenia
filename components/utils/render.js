@@ -7,7 +7,7 @@ import React from 'react';
 const render = {
   dic(type) {
     return function(text, record) {
-      return dictionary.getTitle(type, text);
+      return dictionary.getLabel(type, text);
     }
   },
   tag(type) {

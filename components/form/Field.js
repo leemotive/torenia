@@ -32,7 +32,7 @@ class Field extends Component {
     const Widget = resolveWidget(widget || 'Input');
 
     label && (itemProps.label = label);
-    defaultValue && (decorator.initialValue = (Widget.transform || noop)(defaultValue));
+    decorator.initialValue = (Widget.transform || noop)(defaultValue);
     Widget.valuePropName && (decorator.valuePropName = Widget.valuePropName);
     getValueFromEvent && (decorator.getValueFromEvent = getValueFromEvent);
 
