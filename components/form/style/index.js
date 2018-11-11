@@ -1,14 +1,1 @@
-import 'antd/lib/form/style';
-import 'antd/lib/cascader/style';
-import 'antd/lib/checkbox/style';
-import 'antd/lib/date-picker/style';
-import 'antd/lib/time-picker/style';
-import 'antd/lib/input/style';
-import 'antd/lib/radio/style';
-import 'antd/lib/select/style';
-import 'antd/lib/slider/style';
-import 'antd/lib/switch/style';
-import 'antd/lib/transfer/style';
-import 'antd/lib/button/style';
-import 'antd/lib/row/style';
-import 'antd/lib/col/style';
+
