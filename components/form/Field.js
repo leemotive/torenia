@@ -9,6 +9,7 @@ class Field extends Component {
   static defaultProps = {
     decorator: {},
     itemProps: {},
+    widget: 'Input'
   }
 
   constructor(props) {
@@ -29,7 +30,7 @@ class Field extends Component {
       ...others
     } = this.props;
 
-    const Widget = resolveWidget(widget || 'Input');
+    const Widget = typeof widget === 'string' ? resolveWidget(widget) : widget;
 
     label && (itemProps.label = label);
     decorator.initialValue = (Widget.transform || noop)(defaultValue);

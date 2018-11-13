@@ -64,9 +64,9 @@ class Form extends Component {
 
     const items = [];
     for(let field of fields) {
-      if (typeof field.widget === 'function') {
-        const widget = field.widget(this.props);
-        items.push(React.cloneElement(widget, { key: field.key || items.length }));
+      if (typeof field === 'function') {
+        const funcField = field(this.props);
+        items.push(React.cloneElement(funcField, { key: items.length }));
       } else {
         field.key || (field.key = items.length);
         items.push(<Field { ...field } form={form} />);
