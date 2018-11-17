@@ -108,11 +108,7 @@ class Form extends Component {
       ].filter(_ => _);
     }
 
-    if ('function' === typeof children) {
-      children = children(this);
-    }
-
-    return React.Children.map(children, child => {
+    return React.Children.map(children, (child, index) => {
       if ('string' === typeof child) {
         child = this.getBtn(child);
       }
