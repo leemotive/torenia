@@ -9,6 +9,7 @@ import Transfer from './Transfer';
 import Slider from './Slider';
 import Switch from './Switch';
 import Password from './Password';
+import SmsCode from './SmsCode';
 
 const Widgets = {
   Input,
@@ -24,6 +25,7 @@ const Widgets = {
   Slider,
   Switch,
   Password,
+  SmsCode,
 };
 
 export default Widgets;
