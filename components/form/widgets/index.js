@@ -11,6 +11,8 @@ import Switch from './Switch';
 import Password from './Password';
 import SmsCode from './SmsCode';
 import Captcha from './Captcha';
+import Rate from './Rate';
+import AutoComplete from './AutoComplete';
 
 const Widgets = {
   Input,
@@ -28,6 +30,8 @@ const Widgets = {
   Password,
   SmsCode,
   Captcha,
+  Rate,
+  AutoComplete,
 };
 
 export default Widgets;
