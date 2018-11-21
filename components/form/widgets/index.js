@@ -10,6 +10,7 @@ import Slider from './Slider';
 import Switch from './Switch';
 import Password from './Password';
 import SmsCode from './SmsCode';
+import Captcha from './Captcha';
 
 const Widgets = {
   Input,
@@ -26,6 +27,7 @@ const Widgets = {
   Switch,
   Password,
   SmsCode,
+  Captcha,
 };
 
 export default Widgets;

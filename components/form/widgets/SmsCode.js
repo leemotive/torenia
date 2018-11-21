@@ -6,9 +6,13 @@ const { Group: InputGroup } = Input;
 
 class SmsCode extends Component {
   static defaultProps = {
+    delay: 60,
     api: '/api/smscode',
     btnWidth: 102,
-    paramName: 'phone'
+    paramName: 'phone',
+    isSuccess(data) {
+      return data === true || (data && data.code == 200)
+    }
   }
   constructor(props) {
     super(props);
@@ -18,7 +22,7 @@ class SmsCode extends Component {
   }
 
   getSmsCode = async () => {
-    const { api, method = 'post', paramName, value: phone } = this.props;
+    const { api, method = 'post', isSuccess, paramName, value: phone } = this.props;
     if (this.counting) {
       return;
     }
@@ -29,20 +33,22 @@ class SmsCode extends Component {
         [paramName]: phone,
       }
     });
-
-    this.countStart = Date.now();
-    this.counting = true;
-    this.countDown();
+    if (isSuccess(data)) {
+      this.countStart = Date.now();
+      this.counting = true;
+      this.countDown();
+    }
   }
 
   countDown = () => {
-    let loop = 60 - Math.floor((Date.now() - this.countStart) / 1000);
-    const smsText = loop === 0 ? '获取验证码' : `${loop}秒后获取`;
+    const { delay } = this.props;
+    let loop = delay - Math.floor((Date.now() - this.countStart) / 1000);
+    const smsText = loop > 0 ? `${loop}秒后获取` : '获取验证码';
     this.timer = window.setTimeout(() => {
       this.setState({
         smsText
       });
-      if (loop !== 0) {
+      if (loop > 0) {
         this.countDown();
         this.counting = false;
       }
@@ -54,7 +60,7 @@ class SmsCode extends Component {
   }
 
   render() {
-    const { children, btnWidth, ...inputProps } = this.props;
+    const { children, btnWidth, isSuccess, paramName, ...inputProps } = this.props;
 
     return (
       <InputGroup compact={true} style={{display: 'flex'}}>
