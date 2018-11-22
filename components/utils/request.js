@@ -14,6 +14,7 @@ const fetch = (options) => {
     data,
     fetchType,
     url,
+    ...otherConfig
   } = options
 
   const cloneData = cloneDeep(data);
@@ -55,17 +56,19 @@ const fetch = (options) => {
     case 'get':
       return axios.get(url, {
         params: cloneData,
+        ...otherConfig,
       })
     case 'delete':
       return axios.delete(url, {
         data: cloneData,
+        ...otherConfig,
       })
     case 'post':
-      return axios.post(url, cloneData)
+      return axios.post(url, cloneData, otherConfig)
     case 'put':
-      return axios.put(url, cloneData)
+      return axios.put(url, cloneData, otherConfig)
     case 'patch':
-      return axios.patch(url, cloneData)
+      return axios.patch(url, cloneData, otherConfig)
     default:
       return axios(options)
   }
