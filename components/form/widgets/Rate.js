@@ -8,7 +8,7 @@ class Rate extends Component {
 
   render() {
     const { ...props } = this.props;
-    return <AntRate { ...props } />;
+    return <AntRate {...props} />;
   }
 }
 

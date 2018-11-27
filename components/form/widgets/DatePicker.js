@@ -7,14 +7,12 @@ class DatePicker extends Component {
     const { ...props } = this.props;
     props.style = { width: '100%', ...props.style };
 
-    return <AntDatePicker { ...props } />
+    return <AntDatePicker {...props} />;
   }
 }
 
-
-
 DatePicker.transform = function(timestamp) {
   return Moment(timestamp);
-}
+};
 
 export default DatePicker;

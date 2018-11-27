@@ -4,7 +4,7 @@ import { Input as AntInput } from 'antd';
 class Hidden extends Component {
   render() {
     const props = { ...this.props, type: 'hidden' };
-    return <AntInput {...props } />
+    return <AntInput {...props} />;
   }
 }
 

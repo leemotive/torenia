@@ -17,7 +17,7 @@ class Table extends Component {
       limit: 'limit',
       skip: 'skip',
       order: 'order',
-      orderBy: 'orderBy'
+      orderBy: 'orderBy',
     },
     className: '',
     beforeQuery: noop,
@@ -34,20 +34,13 @@ class Table extends Component {
     locale: {
       filterConfirm: '确定',
       filterReset: '清空',
-      empty: '暂无数据'
-    }
-  }
+      empty: '暂无数据',
+    },
+  };
   constructor(props) {
     super(props);
 
-    const {
-      resource,
-      api,
-      dataSource,
-      pagination,
-      columns,
-      noCreate,
-    } = props;
+    const { resource, api, dataSource, pagination, columns } = props;
 
     if (!api && !resource && !dataSource) {
       throw '错误使用, api, resource, dataSource至少使用一个';
@@ -70,7 +63,7 @@ class Table extends Component {
   }
   static childContextTypes = {
     _t: PropTypes.object,
-  }
+  };
 
   async query(search, pagination, filters, sorter) {
     const { pageKey, beforeQuery, dataPreProcess } = this.props;
@@ -104,7 +97,7 @@ class Table extends Component {
     }
     let data = await request({
       url: `${options.apiPrefix}/${this.resource}`,
-      data: { ...condition }
+      data: { ...condition },
     });
     data = dataPreProcess(options.globalDataPreProcess(data));
     this.setState({
@@ -115,22 +108,19 @@ class Table extends Component {
     });
   }
 
-  onCheckColumnChanged = (checkedColumns) => {
-    const {
-      name
-    } = this.props;
+  onCheckColumnChanged = checkedColumns => {
+    const { name } = this.props;
     this.setState({
-      checkedColumns
-    });
-    localStorage.setItem(`${name}-checked-columns`, JSON.stringify(checkedColumns));
-  }
-  resolveColumn() {
-    const {
-      checkColumnBehavior, noRowOperation, locale
-    } = this.props;
-    const {
       checkedColumns,
-    } = this.state;
+    });
+    localStorage.setItem(
+      `${name}-checked-columns`,
+      JSON.stringify(checkedColumns),
+    );
+  };
+  resolveColumn() {
+    const { checkColumnBehavior, noRowOperation, locale } = this.props;
+    const { checkedColumns } = this.state;
 
     const columns = this.state.columns.filter(column => {
       if (column.type === 'operation') {
@@ -141,13 +131,15 @@ class Table extends Component {
       if (column.filter) {
         const { formOption = {} } = column;
         if (formOption.options) {
-          column.filters || (column.filters = formOption.options.map(o => ({ text: o.label, value: o.value })));
+          column.filters ||
+            (column.filters = formOption.options.map(o => ({
+              text: o.label,
+              value: o.value,
+            })));
         } else if (!column.filterDropdown) {
           column.filterDropdown = ({ confirm, setSelectedKeys }) => {
             const formConfig = {
-              fields: [
-                { name: column.dataIndex }
-              ],
+              fields: [{ name: column.dataIndex }],
               onSubmit: formData => {
                 setSelectedKeys(formData[column.dataIndex]);
                 confirm();
@@ -158,20 +150,21 @@ class Table extends Component {
               },
               layout: 'inline',
               opProps: {
-                wrapperCol: { offset: 0 }
+                wrapperCol: { offset: 0 },
               },
               submitText: locale.filterConfirm,
               resetText: locale.filterReset,
               className: 'table-filter-dropdown',
-            }
-            return <Form { ...formConfig } />
-          }
+            };
+            return <Form {...formConfig} />;
+          };
         }
       }
 
       if (column.alwaysShow) return true;
-      const checked = !checkedColumns || checkedColumns.includes(column.dataIndex);
-      return !(checked ^ checkColumnBehavior === 'visible');
+      const checked =
+        !checkedColumns || checkedColumns.includes(column.dataIndex);
+      return !(checked ^ (checkColumnBehavior === 'visible'));
     });
 
     if (!this.operationFormProps && !noRowOperation) {
@@ -182,21 +175,31 @@ class Table extends Component {
   }
   resolveDefaultCheckedColumns() {
     const {
-      defaultCheckedColumns, name, checkColumnBehavior, columns
+      defaultCheckedColumns,
+      name,
+      checkColumnBehavior,
+      columns,
     } = this.props;
 
     let checkedColumns;
     try {
-      checkedColumns = JSON.parse(localStorage.getItem(`${name}-checked-columns`));
-    } catch (e) { }
-    checkedColumns = checkedColumns
-      || defaultCheckedColumns
-      || (checkColumnBehavior === 'visible' ? columns.filter(column => {
-        if (column.type === 'operation') return false;
-        if (column.alwaysHide) return false;
-        if (column.alwaysShow) return false;
-        return true;
-      }).map(_ => _.dataIndex) : []);
+      checkedColumns = JSON.parse(
+        localStorage.getItem(`${name}-checked-columns`),
+      );
+    } catch (e) {}
+    checkedColumns =
+      checkedColumns ||
+      defaultCheckedColumns ||
+      (checkColumnBehavior === 'visible'
+        ? columns
+            .filter(column => {
+              if (column.type === 'operation') return false;
+              if (column.alwaysHide) return false;
+              if (column.alwaysShow) return false;
+              return true;
+            })
+            .map(_ => _.dataIndex)
+        : []);
     return checkedColumns;
   }
 
@@ -214,32 +217,40 @@ class Table extends Component {
   defaultOperation(types, text, record) {
     let operations = [];
     const { editText, deleteText, deleteTip, rowKey } = this.props;
-    for(let type of types) {
+    for (let type of types) {
       if ('edit' === type) {
-        operations.push(<a key="edit" className="op-btn" onClick={() => this.showEdit(record)}>{editText}</a>);
+        operations.push(
+          <a
+            key="edit"
+            className="op-btn"
+            onClick={() => this.showEdit(record)}
+          >
+            {editText}
+          </a>,
+        );
       } else if ('delete' === type) {
         operations.push(
           <Popconfirm
             key="delete"
             title={`${deleteTip}?`}
             onConfirm={() => {
-              request({method: 'delete', url: `${options.apiPrefix}/${this.resource}/${record[rowKey]}`}).then(data => {
+              request({
+                method: 'delete',
+                url: `${options.apiPrefix}/${this.resource}/${record[rowKey]}`,
+              }).then(() => {
                 this.query();
-              })
+              });
             }}
           >
             <a className="op-btn">{deleteText}</a>
-          </Popconfirm>
-        )
+          </Popconfirm>,
+        );
       }
     }
     return operations;
   }
   resolveRowOperation() {
-    const {
-      rowOperation,
-      rowOperationProps,
-    } = this.props;
+    const { rowOperation, rowOperationProps } = this.props;
     return {
       title: '操作',
       dataIndex: '@table/operation',
@@ -256,16 +267,24 @@ class Table extends Component {
               if (React.isValidElement(originOp)) {
                 return React.cloneElement(originOp, {
                   key: `@Table/${i}`,
-                  className: `${originOp.props.className || ''} op-btn`
+                  className: `${originOp.props.className || ''} op-btn`,
                 });
               }
-            };
-            if (typeof originOp === 'string') return this.defaultOperation([originOp], text, record);
+            }
+            if (typeof originOp === 'string')
+              return this.defaultOperation([originOp], text, record);
           });
         } else {
-          ops = this.defaultOperation(['edit', 'delete'].filter(ac => this.props[`no${ac[0].toUpperCase()}${ac.slice(1)}`] !== true), text, record);
+          ops = this.defaultOperation(
+            ['edit', 'delete'].filter(
+              ac =>
+                this.props[`no${ac[0].toUpperCase()}${ac.slice(1)}`] !== true,
+            ),
+            text,
+            record,
+          );
         }
-        return <div className="rowOperations">{ops}</div>
+        return <div className="rowOperations">{ops}</div>;
       },
       ...rowOperationProps,
     };
@@ -280,7 +299,7 @@ class Table extends Component {
 
   onConditionChange = (pagination, filters, sorter) => {
     this.query({}, pagination, filters, sorter);
-  }
+  };
 
   render() {
     const filterdColumns = this.resolveColumn();
@@ -298,15 +317,12 @@ class Table extends Component {
       beforeSave,
       ...others
     } = this.props;
-    const {
-      dataSource,
-      pagination,
-      editVisible,
-      record,
-    } = this.state;
+    const { dataSource, pagination, editVisible, record } = this.state;
 
     const noOperation = {
-      noColumnCheck, noCreate, noRefresh
+      noColumnCheck,
+      noCreate,
+      noRefresh,
     };
 
     const columnCheckConfig = {
@@ -317,16 +333,26 @@ class Table extends Component {
     editConfig.defaultValue = record;
     return (
       <div className={`${className} table-wrap no-wrap-table`}>
-        <Header tableOperation={tableOperation} noOperation={noOperation} columnCheckConfig={columnCheckConfig} searchConfig={searchConfig} />
-        <AntTable
-          columns={ filterdColumns }
-          dataSource={ dataSource }
-          pagination={ !noPagination && pagination }
-          onChange={ this.onConditionChange }
-          scroll={{ x: true }}
-          { ...others }
+        <Header
+          tableOperation={tableOperation}
+          noOperation={noOperation}
+          columnCheckConfig={columnCheckConfig}
+          searchConfig={searchConfig}
         />
-        <Edit visible={editVisible} columns={columns} editConfig={editConfig} beforeSave={beforeSave} />
+        <AntTable
+          columns={filterdColumns}
+          dataSource={dataSource}
+          pagination={!noPagination && pagination}
+          onChange={this.onConditionChange}
+          scroll={{ x: true }}
+          {...others}
+        />
+        <Edit
+          visible={editVisible}
+          columns={columns}
+          editConfig={editConfig}
+          beforeSave={beforeSave}
+        />
       </div>
     );
   }

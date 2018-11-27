@@ -4,9 +4,7 @@ import React, { Component } from 'react';
 class Switch extends Component {
   render() {
     const { text, ...props } = this.props;
-    return (
-      <AntSwitch {...props}>{text}</AntSwitch>
-    )
+    return <AntSwitch {...props}>{text}</AntSwitch>;
   }
 }
 

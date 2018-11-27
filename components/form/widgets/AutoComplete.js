@@ -8,7 +8,7 @@ class AutoComplete extends Component {
 
   render() {
     const { ...props } = this.props;
-    return <AntAutoComplete { ...props } />;
+    return <AntAutoComplete {...props} />;
   }
 }
 

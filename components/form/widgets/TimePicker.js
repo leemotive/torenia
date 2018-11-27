@@ -7,17 +7,15 @@ class TimePicker extends Component {
     const { ...props } = this.props;
     props.style = { width: '100%', ...props.style };
 
-    return <AntTimePicker { ...props } />
+    return <AntTimePicker {...props} />;
   }
 }
-
-
 
 TimePicker.transform = function(timestamp) {
   if (/\d{1,2}:\d{1,2}:\d{1,2}/.test(timestamp)) {
     return Moment(timestamp, 'HH:mm:ss');
   }
   return Moment(timestamp);
-}
+};
 
 export default TimePicker;

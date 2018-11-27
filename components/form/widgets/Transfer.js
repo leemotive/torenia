@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 class Transfer extends Component {
   render() {
     const { ...props } = this.props;
-    return <AntTransfer showSearch { ...props } />
+    return <AntTransfer showSearch {...props} />;
   }
 }
 

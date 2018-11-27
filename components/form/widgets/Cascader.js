@@ -6,9 +6,7 @@ class Cascader extends Component {
   render() {
     const { ...props } = this.props;
     props.style = { width: '100%', ...props.style };
-    return (
-      <AntCascader { ...props } />
-    )
+    return <AntCascader {...props} />;
   }
 }
 
@@ -17,9 +15,7 @@ class Address extends Component {
     const { ...props } = this.props;
     props.options = props.options || city;
     props.style = { width: '100%', ...props.style };
-    return (
-      <AntCascader { ...props } />
-    )
+    return <AntCascader {...props} />;
   }
 }
 
@@ -29,9 +25,9 @@ Cascader.transform = Address.transform = function(value) {
   } else if (typeof value === 'string') {
     return value.split(' ');
   } else {
-    return []
+    return [];
   }
-}
+};
 
 export default Cascader;
 export { Address };

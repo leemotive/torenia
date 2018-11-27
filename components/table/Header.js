@@ -4,7 +4,6 @@ import { Row, Col, Button, Icon, Tooltip } from 'antd';
 import ColumnCheck from './ColumnCheck';
 import Search from './Search';
 
-
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -29,9 +28,13 @@ class Header extends Component {
         if (typeof operation === 'string') {
           return this.defaultTableOperation([operation]);
         }
-      })
+      });
     } else {
-      return this.defaultTableOperation(['create', 'refresh', 'columnCheck'].filter(ac => noOperation[`no${ac[0].toUpperCase()}${ac.slice(1)}`] !== true))
+      return this.defaultTableOperation(
+        ['create', 'refresh', 'columnCheck'].filter(
+          ac => noOperation[`no${ac[0].toUpperCase()}${ac.slice(1)}`] !== true,
+        ),
+      );
     }
   }
 
@@ -39,29 +42,33 @@ class Header extends Component {
     const { columnCheckConfig } = this.props;
     return operations.map(operation => {
       if ('columnCheck' === operation) {
-        return (
-            <ColumnCheck key="@table/columnCheck" {...columnCheckConfig} />
-        )
+        return <ColumnCheck key="@table/columnCheck" {...columnCheckConfig} />;
       } else if ('create' === operation) {
         return (
           <Tooltip key="@table/add" title="创建">
-            <Button className="tableActionButton" onClick={() => {
-              this.context._t.showEdit({});
-            }}>
+            <Button
+              className="tableActionButton"
+              onClick={() => {
+                this.context._t.showEdit({});
+              }}
+            >
               <Icon type="plus" />
             </Button>
           </Tooltip>
-        )
+        );
       } else if ('refresh' === operation) {
         return (
           <Tooltip key="@table/sync" title="刷新">
-            <Button className="tableActionButton" onClick={() => {
-              this.context._t.query({});
-            }}>
+            <Button
+              className="tableActionButton"
+              onClick={() => {
+                this.context._t.query({});
+              }}
+            >
               <Icon type="sync" />
             </Button>
           </Tooltip>
-        )
+        );
       }
     });
   }
@@ -75,9 +82,7 @@ class Header extends Component {
           <Col className="flexCol">
             <Search formOption={formOption} />
           </Col>
-          <Col className="headerRowAction">
-            {this.resolveTableOperation()}
-          </Col>
+          <Col className="headerRowAction">{this.resolveTableOperation()}</Col>
         </Row>
       </div>
     );
@@ -85,7 +90,7 @@ class Header extends Component {
 }
 
 Header.contextTypes = {
-  _t: PropTypes.object
+  _t: PropTypes.object,
 };
 
 export default Header;

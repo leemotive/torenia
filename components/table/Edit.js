@@ -27,40 +27,43 @@ class Edit extends Component {
       extraFieldsMap[field.name] = field;
     });
 
-    let fields = columns.map(col => {
-      const { dataIndex, title, formOption } = col;
-      let newCol = {
-        label: title,
-        name: dataIndex,
-        ...formOption,
-      };
-      if (!dataIndex) {
-        return newCol;
-      }
-      const extraField = extraFieldsMap[dataIndex];
-      delete extraFieldsMap[dataIndex];
-      return {
-        ...newCol,
-        ...extraField,
-      };
-    }).concat(Object.values(extraFieldsMap)).filter(col => {
-      const { noCreate, noEdit } = col;
-      const noCE = isEdit ? noEdit : noCreate;
-      delete col.noCreate;
-      delete col.noEdit;
-      return col.type !== 'operation'
-        && !col.name.startsWith('@')
-        && !noCE
-    });
+    let fields = columns
+      .map(col => {
+        const { dataIndex, title, formOption } = col;
+        let newCol = {
+          label: title,
+          name: dataIndex,
+          ...formOption,
+        };
+        if (!dataIndex) {
+          return newCol;
+        }
+        const extraField = extraFieldsMap[dataIndex];
+        delete extraFieldsMap[dataIndex];
+        return {
+          ...newCol,
+          ...extraField,
+        };
+      })
+      .concat(Object.values(extraFieldsMap))
+      .filter(col => {
+        const { noCreate, noEdit } = col;
+        const noCE = isEdit ? noEdit : noCreate;
+        delete col.noCreate;
+        delete col.noEdit;
+        return col.type !== 'operation' && !col.name.startsWith('@') && !noCE;
+      });
 
     return { fields, itemLayout, ...others };
-  }
+  };
   buildModalInfo() {
-    const { editConfig: { defaultValue = {} } } = this.props;
+    const {
+      editConfig: { defaultValue = {} },
+    } = this.props;
     this.id = defaultValue[this.rowKey];
     this.isEdit = this.id !== undefined;
   }
-  onSubmit = (values) => {
+  onSubmit = values => {
     const { beforeSave } = this.props;
     const id = this.isEdit ? this.id : undefined;
     const idUrl = id ? `/${id}` : '';
@@ -73,12 +76,11 @@ class Edit extends Component {
     return request({
       url: `${options.apiPrefix}/${this.context._t.resource}${idUrl}`,
       method: id ? 'PUT' : 'POST',
-      data: values
-    }).then(_ => {
+      data: values,
+    }).then(() => {
       this.context._t.query();
     });
-  }
-
+  };
 
   shouldComponentUpdate(nextProps) {
     if (!nextProps.visible && !this.props.visible) {
@@ -88,16 +90,17 @@ class Edit extends Component {
   }
 
   render() {
-    const {
-      visible
-    } = this.props;
+    const { visible } = this.props;
     this.buildModalInfo();
     const {
       render,
       editTitle = '编辑',
       createTitle = '新增',
       ...formOption
-    } = { ...Edit.buildFormOption(this.props, this.isEdit), onSubmit: this.onSubmit };
+    } = {
+      ...Edit.buildFormOption(this.props, this.isEdit),
+      onSubmit: this.onSubmit,
+    };
 
     return (
       <Modal
@@ -107,17 +110,16 @@ class Edit extends Component {
         destroyOnClose={true}
         onCancel={() => this.context._t.hideEdit()}
       >
-        <Form
-          ref={this.formRef}
-          { ...formOption }
-        >{render || null}</Form>
+        <Form ref={this.formRef} {...formOption}>
+          {render || null}
+        </Form>
       </Modal>
-    )
+    );
   }
 }
 
 Edit.contextTypes = {
-  _t: PropTypes.object
+  _t: PropTypes.object,
 };
 
 export default Edit;

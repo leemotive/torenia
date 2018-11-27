@@ -6,16 +6,16 @@ import React from 'react';
 
 const render = {
   dic(type) {
-    return function(text, record) {
+    return function(text) {
       return dictionary.getLabel(type, text);
-    }
+    };
   },
   tag(type) {
-    return function(text, record) {
+    return function(text) {
       const dic = dictionary.getValue(type);
       let tag;
       if (Array.isArray(dic)) {
-        tag = dic.find(item => item.value === text)
+        tag = dic.find(item => item.value === text);
       } else {
         for (let [label, item] of Object.entries(dic)) {
           if (item.value === text) {
@@ -24,13 +24,13 @@ const render = {
           }
         }
       }
-      return <Tag color={tag.color}>{tag.label}</Tag>
-    }
+      return <Tag color={tag.color}>{tag.label}</Tag>;
+    };
   },
   moment(format = 'YYYY-MM-DD HH:mm:ss') {
-    return function(text, record) {
+    return function(text) {
       return Moment(text).format(format);
-    }
+    };
   },
   date() {
     return render.moment('YYYY-MM-DD');
@@ -39,7 +39,7 @@ const render = {
     return render.moment();
   },
   time() {
-    return render.moment('HH:mm:ss')
+    return render.moment('HH:mm:ss');
   },
   pipe(renders) {
     const tasks = renders.split('|').map(task => {
@@ -50,15 +50,14 @@ const render = {
       return tasks.reduce((last, name) => {
         return name(last, record);
       }, text);
-    }
+    };
   },
   number(format) {
     const df = new DecimalFormat(format);
-    return function(text, record) {
+    return function(text) {
       return df.format(text);
-    }
-  }
+    };
+  },
 };
-
 
 export default render;

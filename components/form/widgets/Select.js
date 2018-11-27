@@ -11,15 +11,21 @@ class Select extends Component {
       if (React.isValidElement(option)) {
         return option;
       } else if (typeof option === 'string') {
-        return <Option value={option} key={index}>{option}</Option>
+        return (
+          <Option value={option} key={index}>
+            {option}
+          </Option>
+        );
       } else {
-        return <Option value={option.value} key={index}>{option.label}</Option>
+        return (
+          <Option value={option.value} key={index}>
+            {option.label}
+          </Option>
+        );
       }
-    })
+    });
 
-    return (
-      <AntSelect { ...others }>{children}</AntSelect>
-    )
+    return <AntSelect {...others}>{children}</AntSelect>;
   }
 }
 

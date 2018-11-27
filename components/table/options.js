@@ -1,5 +1,3 @@
-
-
 let options = {
   apiPrefix: '',
   defaultPagination: {
@@ -18,9 +16,8 @@ let options = {
     } else {
       return data;
     }
-  }
+  },
 };
-
 
 export default options;
 
@@ -29,7 +26,7 @@ export function config(conf) {
   if (done) {
     return;
   }
-  for(let [key, value] of Object.entries(conf)) {
+  for (let [key, value] of Object.entries(conf)) {
     options[key] = value;
   }
   done = true;

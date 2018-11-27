@@ -24,7 +24,7 @@ class Dictionary {
     }
 
     if (Array.isArray(data)) {
-      return (data.find(item => item.label === label) || {}).value
+      return (data.find(item => item.label === label) || {}).value;
     } else if (typeof data[label] !== 'object') {
       return data[label];
     } else {
@@ -59,7 +59,10 @@ class Dictionary {
     if (Array.isArray(data)) {
       options = data.map(item => ({ label: item.label, value: item.value }));
     } else {
-      options = Object.entries(data).map(item => ({ label: item[0], value:item[1] }));
+      options = Object.entries(data).map(item => ({
+        label: item[0],
+        value: item[1],
+      }));
     }
     if (Array.isArray(extra.prepend)) {
       options.unshift(...extra.prepend);
@@ -70,7 +73,9 @@ class Dictionary {
 
     if (Array.isArray(filter.label) || Array.isArray(filter.value)) {
       const { label = [], value = [] } = filter;
-      options = options.filter(item => !label.includes(item.label) && !value.includes(item.value));
+      options = options.filter(
+        item => !label.includes(item.label) && !value.includes(item.value),
+      );
     }
 
     if (reverse) {

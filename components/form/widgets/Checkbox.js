@@ -1,11 +1,11 @@
 import { Checkbox as AntCheckbox } from 'antd';
 import React, { Component } from 'react';
-const { Group: CheckboxGroup } = AntCheckbox
+const { Group: CheckboxGroup } = AntCheckbox;
 
 class Checkbox extends Component {
   render() {
     const { text, ...props } = this.props;
-    return <AntCheckbox { ...props }>{text}</AntCheckbox>
+    return <AntCheckbox {...props}>{text}</AntCheckbox>;
   }
 }
 Checkbox.valuePropName = 'checked';
@@ -13,7 +13,7 @@ Checkbox.valuePropName = 'checked';
 class Group extends Component {
   render() {
     const props = { ...this.props };
-    return <CheckboxGroup { ...props } />
+    return <CheckboxGroup {...props} />;
   }
 }
 

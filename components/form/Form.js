@@ -1,53 +1,49 @@
-import React, { Component } from "react";
-import { Form as AntForm, Button, Row, Col } from 'antd';
+import React, { Component } from 'react';
+import { Form as AntForm, Button } from 'antd';
 import { registerFormWidget } from './widgets';
 import Field from './Field';
 
-const FormItem  = AntForm.Item;
+const FormItem = AntForm.Item;
 
 class Form extends Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {};
   }
 
-  onSubmit = (e) => {
+  onSubmit = e => {
     e && e.preventDefault();
     const {
-      form: {
-        validateFieldsAndScroll
-      }
+      form: { validateFieldsAndScroll },
     } = this.props;
 
     validateFieldsAndScroll((errors, values) => {
       if (errors) return;
       this.props.onSubmit(values, { event: e });
     });
-  }
-  reset = (e) => {
+  };
+  reset = e => {
     e && e.preventDefault();
     const {
       onReset,
-      form: {
-        resetFields
-      }
+      form: { resetFields },
     } = this.props;
     resetFields();
     onReset();
-  }
+  };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const {
-      fields,
-      defaultValue,
-      itemLayout,
-    } = nextProps;
+  static getDerivedStateFromProps(nextProps) {
+    const { fields, defaultValue, itemLayout } = nextProps;
 
-    for(let field of fields) {
+    for (let field of fields) {
       const { name } = field;
       if (typeof field.widget !== 'function') {
         field.defaultValue = defaultValue[name];
-        field.itemProps = { ...field.itemProps, ...itemLayout, ...field.layout };
+        field.itemProps = {
+          ...field.itemProps,
+          ...itemLayout,
+          ...field.layout,
+        };
       }
     }
 
@@ -55,57 +51,63 @@ class Form extends Component {
   }
 
   resolveFormItem() {
-    const {
-      fields,
-    } = this.state;
-    const {
-      form
-    } = this.props;
+    const { fields } = this.state;
+    const { form } = this.props;
 
     const items = [];
-    for(let field of fields) {
+    for (let field of fields) {
       if (typeof field === 'function') {
         const funcField = field(this.props);
         items.push(React.cloneElement(funcField, { key: items.length }));
       } else {
         field.key || (field.key = items.length);
-        items.push(<Field { ...field } form={form} />);
+        items.push(<Field {...field} form={form} />);
       }
     }
     return items;
   }
 
-  resolveWidget = (name) => {
-    const {
-      fields,
-    } = this.state;
-    const {
-      form
-    } = this.props;
+  resolveWidget = name => {
+    const { fields } = this.state;
+    const { form } = this.props;
     const field = fields.find(field => field.name === name);
-    return <Field { ...field } form={form} />;
-  }
+    return <Field {...field} form={form} />;
+  };
 
-  getBtn = (name) => {
+  getBtn = name => {
     if ('submit' === name) {
-      return <Button type="primary" key="torenia.form.submit" className="form-submit-btn" htmlType="submit" style={{marginRight: 10}}>{this.props.submitText}</Button>;
+      return (
+        <Button
+          type="primary"
+          key="torenia.form.submit"
+          className="form-submit-btn"
+          htmlType="submit"
+          style={{ marginRight: 10 }}
+        >
+          {this.props.submitText}
+        </Button>
+      );
     } else if ('reset' === name) {
-      return <Button type="default" key="torenia.form.reset" className="form-submit-reset" onClick={this.reset}>{this.props.resetText}</Button>;
+      return (
+        <Button
+          type="default"
+          key="torenia.form.reset"
+          className="form-submit-reset"
+          onClick={this.reset}
+        >
+          {this.props.resetText}
+        </Button>
+      );
     }
     return null;
-  }
+  };
 
   renderOp() {
-    let {
-      children, opBtn
-    } = this.props;
+    let { children, opBtn } = this.props;
     children = opBtn || children;
 
     if (!React.Children.count(children)) {
-      return [
-        this.getBtn('submit'),
-        this.getBtn('reset'),
-      ].filter(_ => _);
+      return [this.getBtn('submit'), this.getBtn('reset')].filter(_ => _);
     }
 
     return React.Children.map(children, (child, index) => {
@@ -117,11 +119,7 @@ class Form extends Component {
   }
 
   renderForm() {
-    const {
-      children,
-      opProps,
-      opBtn,
-    } = this.props;
+    const { children, opProps, opBtn } = this.props;
     opProps.key || (opProps.key = '@form.op');
 
     if ('function' === typeof children) {
@@ -129,27 +127,21 @@ class Form extends Component {
     } else {
       return [
         this.resolveFormItem(),
-        opBtn === false ? null : <FormItem { ...opProps } >{this.renderOp()}</FormItem>
-      ]
+        opBtn === false ? null : (
+          <FormItem {...opProps}>{this.renderOp()}</FormItem>
+        ),
+      ];
     }
   }
 
   render() {
-    const {
-      layout,
-      className,
-    } = this.props;
+    const { layout, className } = this.props;
 
     return (
-      <AntForm
-        onSubmit={this.onSubmit}
-        layout={layout}
-        className={className}
-      >
-        { this.renderForm() }
+      <AntForm onSubmit={this.onSubmit} layout={layout} className={className}>
+        {this.renderForm()}
       </AntForm>
-    )
-
+    );
   }
 }
 Form.Item = FormItem;
@@ -163,10 +155,10 @@ Form.defaultProps = {
   className: '',
   defaultValue: {},
   opProps: {
-    wrapperCol: { offset: 5 }
+    wrapperCol: { offset: 5 },
   },
   onSubmit: () => {},
   onReset: () => {},
-}
+};
 
 export default AntForm.create()(Form);

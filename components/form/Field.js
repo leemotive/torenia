@@ -9,8 +9,8 @@ class Field extends Component {
   static defaultProps = {
     decorator: {},
     itemProps: {},
-    widget: 'Input'
-  }
+    widget: 'Input',
+  };
 
   constructor(props) {
     super(props);
@@ -37,13 +37,12 @@ class Field extends Component {
     Widget.valuePropName && (decorator.valuePropName = Widget.valuePropName);
     getValueFromEvent && (decorator.getValueFromEvent = getValueFromEvent);
 
-    const {
-      getFieldDecorator,
-      getFieldValue,
-    } = form;
+    const { getFieldDecorator, getFieldValue } = form;
     if ('object' == typeof dependency) {
       if ('object' === typeof dependency.$or) {
-        if (Object.entries(dependency.$or).every(f => getFieldValue(f[0]) != f[1])) {
+        if (
+          Object.entries(dependency.$or).every(f => getFieldValue(f[0]) != f[1])
+        ) {
           return null;
         }
       } else {
@@ -57,14 +56,12 @@ class Field extends Component {
       }
     }
     return (
-      <FormItem { ...itemProps } >
+      <FormItem {...itemProps}>
         {getFieldDecorator(name, {
-          ...decorator
-        })(
-          <Widget {...others} />
-        )}
+          ...decorator,
+        })(<Widget {...others} />)}
       </FormItem>
-    )
+    );
   }
 }
 
