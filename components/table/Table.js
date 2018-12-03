@@ -6,6 +6,7 @@ import Header from './Header';
 import Edit from './Edit';
 import Form from '../form';
 import options, { config as configTable } from './options';
+import { Provider as TableProvider } from './context';
 
 const noop = _ => _;
 
@@ -37,6 +38,10 @@ class Table extends Component {
       empty: '暂无数据',
     },
   };
+  static propTypes = {
+    editText: PropTypes.string,
+    deleteText: PropTypes.string,
+  };
   constructor(props) {
     super(props);
 
@@ -55,15 +60,6 @@ class Table extends Component {
       checkedColumns: this.resolveDefaultCheckedColumns(),
     };
   }
-
-  getChildContext() {
-    return {
-      _t: this,
-    };
-  }
-  static childContextTypes = {
-    _t: PropTypes.object,
-  };
 
   async query(search, pagination, filters, sorter) {
     const { pageKey, beforeQuery, dataPreProcess } = this.props;
@@ -333,26 +329,28 @@ class Table extends Component {
     editConfig.defaultValue = record;
     return (
       <div className={`${className} table-wrap no-wrap-table`}>
-        <Header
-          tableOperation={tableOperation}
-          noOperation={noOperation}
-          columnCheckConfig={columnCheckConfig}
-          searchConfig={searchConfig}
-        />
-        <AntTable
-          columns={filterdColumns}
-          dataSource={dataSource}
-          pagination={!noPagination && pagination}
-          onChange={this.onConditionChange}
-          scroll={{ x: true }}
-          {...others}
-        />
-        <Edit
-          visible={editVisible}
-          columns={columns}
-          editConfig={editConfig}
-          beforeSave={beforeSave}
-        />
+        <TableProvider value={{ _t: this }}>
+          <Header
+            tableOperation={tableOperation}
+            noOperation={noOperation}
+            columnCheckConfig={columnCheckConfig}
+            searchConfig={searchConfig}
+          />
+          <AntTable
+            columns={filterdColumns}
+            dataSource={dataSource}
+            pagination={!noPagination && pagination}
+            onChange={this.onConditionChange}
+            scroll={{ x: true }}
+            {...others}
+          />
+          <Edit
+            visible={editVisible}
+            columns={columns}
+            editConfig={editConfig}
+            beforeSave={beforeSave}
+          />
+        </TableProvider>
       </div>
     );
   }

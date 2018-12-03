@@ -3,8 +3,13 @@ import PropTypes from 'prop-types';
 import { Row, Col, Button, Icon, Tooltip } from 'antd';
 import ColumnCheck from './ColumnCheck';
 import Search from './Search';
+import { Consumer } from './context';
 
 class Header extends Component {
+  static propTypes = {
+    noOperation: PropTypes.object,
+  };
+
   constructor(props) {
     super(props);
   }
@@ -49,7 +54,7 @@ class Header extends Component {
             <Button
               className="tableActionButton"
               onClick={() => {
-                this.context._t.showEdit({});
+                this.props.context._t.showEdit({});
               }}
             >
               <Icon type="plus" />
@@ -62,7 +67,7 @@ class Header extends Component {
             <Button
               className="tableActionButton"
               onClick={() => {
-                this.context._t.query({});
+                this.props.context._t.query({});
               }}
             >
               <Icon type="sync" />
@@ -89,8 +94,8 @@ class Header extends Component {
   }
 }
 
-Header.contextTypes = {
-  _t: PropTypes.object,
-};
-
-export default Header;
+export default function(props) {
+  return (
+    <Consumer>{context => <Header {...props} context={context} />}</Consumer>
+  );
+}

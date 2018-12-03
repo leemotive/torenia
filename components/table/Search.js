@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Form from '../form';
+import { Consumer } from './context';
 
 class Search extends Component {
+  static propTypes = {
+    formOption: PropTypes.object,
+  };
+
   onSubmit = values => {
-    this.context._t.query(values);
+    this.props.context._t.query(values);
   };
   render() {
     const { formOption } = this.props;
@@ -25,8 +30,8 @@ class Search extends Component {
   }
 }
 
-Search.contextTypes = {
-  _t: PropTypes.object,
-};
-
-export default Search;
+export default function(props) {
+  return (
+    <Consumer>{context => <Search {...props} context={context} />}</Consumer>
+  );
+}

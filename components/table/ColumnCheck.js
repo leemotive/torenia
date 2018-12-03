@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, Button, Icon, Popover, Tooltip } from 'antd';
+import { Consumer } from './context';
 
 const CheckboxGroup = Checkbox.Group;
 
-const ColumnCheck = (props, context) => {
-  const { columns, checkColumnBehavior = 'visible' } = props;
+const ColumnCheck = ({ context, ...props }) => {
+  const { columns, checkColumnBehavior } = props;
   const filterColumns = columns
     .filter(col => {
       if (col.alwaysShow) return false;
@@ -56,8 +57,17 @@ const ColumnCheck = (props, context) => {
   );
 };
 
-ColumnCheck.contextTypes = {
-  _t: PropTypes.object,
+ColumnCheck.defaultProps = {
+  checkColumnBehavior: 'visible',
+};
+ColumnCheck.propTypes = {
+  columns: PropTypes.array,
 };
 
-export default ColumnCheck;
+export default function(props) {
+  return (
+    <Consumer>
+      {context => <ColumnCheck {...props} context={context} />}
+    </Consumer>
+  );
+}

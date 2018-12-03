@@ -4,58 +4,19 @@ import { Modal } from 'antd';
 import { request } from '../utils';
 import React, { Component } from 'react';
 import options from './options';
+import { Consumer } from './context';
 
 class Edit extends Component {
-  constructor(props, context) {
+  static propTypes = {
+    beforeSave: PropTypes.func,
+  };
+
+  constructor(props) {
     super(props);
-    this.rowKey = context._t.props.rowKey;
+    this.rowKey = props.context._t.props.rowKey;
     this.formRef = React.createRef();
   }
 
-  static buildFormOption = (props, isEdit) => {
-    let {
-      columns,
-      editConfig: { fields: extraFields = [], ...others },
-    } = props;
-    const itemLayout = {
-      labelCol: { span: 5 },
-      wrapperCol: { span: 15 },
-    };
-
-    const extraFieldsMap = {};
-    extraFields.forEach(field => {
-      extraFieldsMap[field.name] = field;
-    });
-
-    let fields = columns
-      .map(col => {
-        const { dataIndex, title, formOption } = col;
-        let newCol = {
-          label: title,
-          name: dataIndex,
-          ...formOption,
-        };
-        if (!dataIndex) {
-          return newCol;
-        }
-        const extraField = extraFieldsMap[dataIndex];
-        delete extraFieldsMap[dataIndex];
-        return {
-          ...newCol,
-          ...extraField,
-        };
-      })
-      .concat(Object.values(extraFieldsMap))
-      .filter(col => {
-        const { noCreate, noEdit } = col;
-        const noCE = isEdit ? noEdit : noCreate;
-        delete col.noCreate;
-        delete col.noEdit;
-        return col.type !== 'operation' && !col.name.startsWith('@') && !noCE;
-      });
-
-    return { fields, itemLayout, ...others };
-  };
   buildModalInfo() {
     const {
       editConfig: { defaultValue = {} },
@@ -74,11 +35,11 @@ class Edit extends Component {
     }
 
     return request({
-      url: `${options.apiPrefix}/${this.context._t.resource}${idUrl}`,
+      url: `${options.apiPrefix}/${this.props.context._t.resource}${idUrl}`,
       method: id ? 'PUT' : 'POST',
       data: values,
     }).then(() => {
-      this.context._t.query();
+      this.props.context._t.query();
     });
   };
 
@@ -98,7 +59,7 @@ class Edit extends Component {
       createTitle = '新增',
       ...formOption
     } = {
-      ...Edit.buildFormOption(this.props, this.isEdit),
+      ...EditInterface.buildFormOption(this.props, this.isEdit),
       onSubmit: this.onSubmit,
     };
 
@@ -108,7 +69,7 @@ class Edit extends Component {
         visible={visible}
         footer={null}
         destroyOnClose={true}
-        onCancel={() => this.context._t.hideEdit()}
+        onCancel={() => this.props.context._t.hideEdit()}
       >
         <Form ref={this.formRef} {...formOption}>
           {render || null}
@@ -118,8 +79,54 @@ class Edit extends Component {
   }
 }
 
-Edit.contextTypes = {
-  _t: PropTypes.object,
+function EditInterface(props) {
+  return (
+    <Consumer>{context => <Edit {...props} context={context} />}</Consumer>
+  );
+}
+EditInterface.buildFormOption = (props, isEdit) => {
+  let {
+    columns,
+    editConfig: { fields: extraFields = [], ...others },
+  } = props;
+  const itemLayout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 15 },
+  };
+
+  const extraFieldsMap = {};
+  extraFields.forEach(field => {
+    extraFieldsMap[field.name] = field;
+  });
+
+  let fields = columns
+    .map(col => {
+      const { dataIndex, title, formOption } = col;
+      let newCol = {
+        label: title,
+        name: dataIndex,
+        ...formOption,
+      };
+      if (!dataIndex) {
+        return newCol;
+      }
+      const extraField = extraFieldsMap[dataIndex];
+      delete extraFieldsMap[dataIndex];
+      return {
+        ...newCol,
+        ...extraField,
+      };
+    })
+    .concat(Object.values(extraFieldsMap))
+    .filter(col => {
+      const { noCreate, noEdit } = col;
+      const noCE = isEdit ? noEdit : noCreate;
+      delete col.noCreate;
+      delete col.noEdit;
+      return col.type !== 'operation' && !col.name.startsWith('@') && !noCE;
+    });
+
+  return { fields, itemLayout, ...others };
 };
 
-export default Edit;
+export default EditInterface;
