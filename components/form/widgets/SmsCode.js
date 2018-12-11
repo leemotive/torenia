@@ -77,7 +77,11 @@ class SmsCode extends Component {
     return (
       <InputGroup compact={true} style={{ display: 'flex' }}>
         <Input style={{ flex: 1 }} {...inputProps} />
-        <Button style={{ width: btnWidth }} onClick={this.getSmsCode}>
+        <Button
+          type="primary"
+          style={{ width: btnWidth }}
+          onClick={this.getSmsCode}
+        >
           {this.state.smsText}
         </Button>
       </InputGroup>
