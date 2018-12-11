@@ -1,6 +1,6 @@
 import Form from '../form';
 import PropTypes from 'prop-types';
-import { Modal } from 'antd';
+import { Modal, Drawer } from 'antd';
 import { request } from '../utils';
 import React, { Component } from 'react';
 import options from './options';
@@ -51,7 +51,7 @@ class Edit extends Component {
   }
 
   render() {
-    const { visible } = this.props;
+    const { visible, formType, width } = this.props;
     this.buildModalInfo();
     const {
       render,
@@ -63,19 +63,38 @@ class Edit extends Component {
       onSubmit: this.onSubmit,
     };
 
-    return (
-      <Modal
-        title={this.isEdit ? editTitle : createTitle}
-        visible={visible}
-        footer={null}
-        destroyOnClose={true}
-        onCancel={() => this.props.context._t.hideEdit()}
-      >
-        <Form ref={this.formRef} {...formOption}>
-          {render || null}
-        </Form>
-      </Modal>
+    const form = (
+      <Form ref={this.formRef} {...formOption}>
+        {render || null}
+      </Form>
     );
+
+    if (formType === 'Modal') {
+      return (
+        <Modal
+          title={this.isEdit ? editTitle : createTitle}
+          visible={visible}
+          footer={null}
+          destroyOnClose={true}
+          onCancel={() => this.props.context._t.hideEdit()}
+        >
+          {form}
+        </Modal>
+      );
+    } else {
+      return (
+        <Drawer
+          title={this.isEdit ? editTitle : createTitle}
+          placement="right"
+          closable={true}
+          visible={visible}
+          width={width}
+          onClose={() => this.props.context._t.hideEdit()}
+        >
+          {form}
+        </Drawer>
+      );
+    }
   }
 }
 

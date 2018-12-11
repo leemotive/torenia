@@ -25,6 +25,8 @@ class Table extends Component {
     beforeSave: noop,
     dataPreProcess: noop,
     checkColumnBehavior: 'visible',
+    formType: 'Modal',
+    formWidth: 700,
     noRowOperation: false,
     editText: '编辑',
     deleteText: '删除',
@@ -311,6 +313,8 @@ class Table extends Component {
       noRefresh,
       noPagination,
       beforeSave,
+      formType,
+      formWidth,
       ...others
     } = this.props;
     const { dataSource, pagination, editVisible, record } = this.state;
@@ -345,7 +349,9 @@ class Table extends Component {
             {...others}
           />
           <Edit
+            width={formWidth}
             visible={editVisible}
+            formType={formType}
             columns={columns}
             editConfig={editConfig}
             beforeSave={beforeSave}
