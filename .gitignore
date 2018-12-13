@@ -4,3 +4,5 @@ es
 dist
 *.log
 /utils
+/compnents/index.js
+/compnents/index.less
