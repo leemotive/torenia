@@ -24,7 +24,7 @@ const render = {
           }
         }
       }
-      return <Tag color={tag.color}>{tag.label}</Tag>;
+      return tag ? <Tag color={tag.color}>{tag.label}</Tag> : text;
     };
   },
   moment(format = 'YYYY-MM-DD HH:mm:ss') {

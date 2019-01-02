@@ -29,7 +29,7 @@ class Edit extends Component {
     const id = this.isEdit ? this.id : undefined;
     const idUrl = id ? `/${id}` : '';
 
-    values = beforeSave(values);
+    values = beforeSave(options.globalBeforeSave(values, id), id);
     if (!values) {
       return;
     }

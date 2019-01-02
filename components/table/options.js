@@ -10,6 +10,14 @@ let options = {
     total: 0,
   },
 
+  pageKey: {
+    limit: 'limit',
+    offset: 'offset',
+    order: 'order',
+    orderBy: 'orderBy',
+  },
+  pageType: 'offset', // currentPage表示当前页，offset表示忽略记录条数
+
   globalDataPreProcess: data => {
     if (data.request && data.data) {
       return data.data;
@@ -17,6 +25,10 @@ let options = {
       return data;
     }
   },
+
+  globalBeforeQuery: c => c,
+  globalBeforeSave: c => c,
+  globalBeforeDelete: c => c,
 };
 
 export default options;

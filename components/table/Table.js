@@ -14,12 +14,8 @@ class Table extends Component {
   static getEditFormOption = Edit.buildFormOption;
   static config = configTable;
   static defaultProps = {
-    pageKey: {
-      limit: 'limit',
-      skip: 'skip',
-      order: 'order',
-      orderBy: 'orderBy',
-    },
+    pageKey: options.pageKey,
+    pageType: options.pageType,
     className: '',
     beforeQuery: noop,
     beforeSave: noop,
@@ -64,7 +60,7 @@ class Table extends Component {
   }
 
   async query(search, pagination, filters, sorter) {
-    const { pageKey, beforeQuery, dataPreProcess } = this.props;
+    const { pageKey, pageType, beforeQuery, dataPreProcess } = this.props;
     const state = this.state;
     const searchCondition = { ...state.search, ...search };
     const pageCondition = { ...state.pagination, ...pagination };
@@ -82,11 +78,14 @@ class Table extends Component {
       ...searchCondition,
       ...filterCondition,
       [pageKey.limit]: pageCondition.pageSize,
-      [pageKey.skip]: (pageCondition.current - 1) * pageCondition.pageSize,
+      [pageKey.offset]:
+        pageType === 'offset'
+          ? (pageCondition.current - 1) * pageCondition.pageSize
+          : pageCondition.current,
       [pageKey.order]: sortCondition.order && sortCondition.order.slice(0, -3),
       [pageKey.orderBy]: sortCondition.field,
     };
-    condition = beforeQuery(condition);
+    condition = await beforeQuery(options.globalBeforeQuery(condition));
     if (!condition) {
       this.setState({
         loading: false,
