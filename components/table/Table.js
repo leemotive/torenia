@@ -316,7 +316,7 @@ class Table extends Component {
       formWidth,
       ...others
     } = this.props;
-    const { dataSource, pagination, editVisible, record } = this.state;
+    const { dataSource, pagination, editVisible, record, loading } = this.state;
 
     const noOperation = {
       noColumnCheck,
@@ -345,6 +345,7 @@ class Table extends Component {
             pagination={!noPagination && pagination}
             onChange={this.onConditionChange}
             scroll={{ x: true }}
+            loading={loading}
             {...others}
           />
           <Edit
