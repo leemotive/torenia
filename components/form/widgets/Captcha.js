@@ -15,8 +15,9 @@ class Captcha extends Component {
   };
   constructor(props) {
     super(props);
+
     this.state = {
-      url: props.url,
+      url: props.api ? '' : props.url,
     };
   }
 
