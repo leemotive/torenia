@@ -13,6 +13,7 @@ import SmsCode from './SmsCode';
 import Captcha from './Captcha';
 import Rate from './Rate';
 import AutoComplete from './AutoComplete';
+import Hidden from './Hidden';
 
 const Widgets = {
   Input,
@@ -32,6 +33,7 @@ const Widgets = {
   Captcha,
   Rate,
   AutoComplete,
+  Hidden,
 };
 
 export default Widgets;
