@@ -32,6 +32,7 @@ class SmsCode extends Component {
     if (this.counting) {
       return;
     }
+    this.setState({ loading: true });
     const data = await request({
       url: api,
       method,
@@ -44,6 +45,7 @@ class SmsCode extends Component {
       this.counting = true;
       this.countDown();
     }
+    this.setState({ loading: false });
   };
 
   countDown = () => {
@@ -56,7 +58,9 @@ class SmsCode extends Component {
       });
       if (loop > 0) {
         this.countDown();
+      } else {
         this.counting = false;
+        this.forceUpdate();
       }
     }, 1000);
   };
@@ -79,8 +83,10 @@ class SmsCode extends Component {
         <Input style={{ flex: 1 }} {...inputProps} />
         <Button
           type="primary"
+          loading={this.state.loading}
           style={{ width: btnWidth }}
           onClick={this.getSmsCode}
+          disabled={this.counting}
         >
           {this.state.smsText}
         </Button>
