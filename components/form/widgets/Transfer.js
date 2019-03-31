@@ -1,13 +1,16 @@
+import React from 'react';
 import { Transfer as AntTransfer } from 'antd';
-import React, { Component } from 'react';
+import BaseWidget from './BaseWidget';
 
-class Transfer extends Component {
+class Transfer extends BaseWidget {
+  valuePropName = 'targetKeys';
   render() {
-    const { ...props } = this.props;
-    return <AntTransfer showSearch {...props} />;
+    const widgetProps = {
+      showSearch: true,
+      ...this.widgetProps(),
+    };
+    return <AntTransfer {...widgetProps} />;
   }
 }
-
-Transfer.valuePropName = 'targetKeys';
 
 export default Transfer;

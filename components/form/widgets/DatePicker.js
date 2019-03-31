@@ -1,18 +1,19 @@
+import React from 'react';
 import { DatePicker as AntDatePicker } from 'antd';
-import React, { Component } from 'react';
-import Moment from 'moment';
+import BaseWidget from './BaseWidget';
 
-class DatePicker extends Component {
+class DatePicker extends BaseWidget {
   render() {
-    const { ...props } = this.props;
-    props.style = { width: '100%', ...props.style };
-
-    return <AntDatePicker {...props} />;
+    const { style, ...pickerProps } = this.widgetProps();
+    const widgetProps = {
+      style: {
+        width: '100%',
+        ...style,
+      },
+      ...pickerProps,
+    };
+    return <AntDatePicker {...widgetProps} />;
   }
 }
-
-DatePicker.transform = function(timestamp) {
-  return Moment(timestamp);
-};
 
 export default DatePicker;

@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Input, Button } from 'antd';
 import request from '../../utils/request';
+import BaseWidget from './BaseWidget';
 
 const { Group: InputGroup } = Input;
 
-class SmsCode extends Component {
+class SmsCode extends BaseWidget {
   static defaultProps = {
     delay: 60,
     api: '/api/smscode',
@@ -71,16 +72,15 @@ class SmsCode extends Component {
 
   render() {
     const {
-      children,
       btnWidth,
       isSuccess,
       paramName,
-      ...inputProps
-    } = this.props;
+      ...widgetProps
+    } = this.widgetProps();
 
     return (
       <InputGroup compact={true} style={{ display: 'flex' }}>
-        <Input style={{ flex: 1 }} {...inputProps} />
+        <Input style={{ flex: 1 }} {...widgetProps} />
         <Button
           type="primary"
           loading={this.state.loading}

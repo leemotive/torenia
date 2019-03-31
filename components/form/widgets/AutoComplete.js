@@ -1,14 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { AutoComplete as AntAutoComplete } from 'antd';
+import BaseWidget from './BaseWidget';
 
-class AutoComplete extends Component {
-  constructor(props) {
-    super(props);
-  }
-
+class AutoComplete extends BaseWidget {
   render() {
-    const { ...props } = this.props;
-    return <AntAutoComplete {...props} />;
+    let widgetProps = this.widgetProps();
+    return <AntAutoComplete {...widgetProps} />;
   }
 }
 

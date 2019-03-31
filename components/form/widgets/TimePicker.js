@@ -1,21 +1,20 @@
+import React from 'react';
 import { TimePicker as AntTimePicker } from 'antd';
-import React, { Component } from 'react';
-import Moment from 'moment';
+import BaseWidget from './BaseWidget';
 
-class TimePicker extends Component {
+class TimePicker extends BaseWidget {
   render() {
-    const { ...props } = this.props;
-    props.style = { width: '100%', ...props.style };
+    const { style, ...pickerProps } = this.widgetProps();
+    const widgetProps = {
+      style: {
+        width: '100%',
+        ...style,
+      },
+      ...pickerProps,
+    };
 
-    return <AntTimePicker {...props} />;
+    return <AntTimePicker {...widgetProps} />;
   }
 }
-
-TimePicker.transform = function(timestamp) {
-  if (/\d{1,2}:\d{1,2}:\d{1,2}/.test(timestamp)) {
-    return Moment(timestamp, 'HH:mm:ss');
-  }
-  return Moment(timestamp);
-};
 
 export default TimePicker;

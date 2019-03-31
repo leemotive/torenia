@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Input as AntInput } from 'antd';
+import BaseWidget from './BaseWidget';
 
-class Password extends Component {
+class Password extends BaseWidget {
   render() {
-    const props = { ...this.props, type: 'password' };
-    return <AntInput {...props} />;
+    const widgetProps = {
+      ...this.widgetProps(),
+      type: 'password',
+    };
+    return <AntInput {...widgetProps} />;
   }
 }
 

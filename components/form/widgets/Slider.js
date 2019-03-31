@@ -1,10 +1,11 @@
+import React from 'react';
 import { Slider as AntSlider } from 'antd';
-import React, { Component } from 'react';
+import BaseWidget from './BaseWidget';
 
-class Slider extends Component {
+class Slider extends BaseWidget {
   render() {
-    const { ...props } = this.props;
-    return <AntSlider {...props} />;
+    const widgetProps = this.widgetProps();
+    return <AntSlider {...widgetProps} />;
   }
 }
 

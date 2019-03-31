@@ -27,16 +27,76 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const formConfig = {
-      fields: [
-        { label: '姓名', name: 'name', widget: 'Input' },
-        { label: '生日', name: 'birthday', widget: 'DatePicker' }
-      ]
+  class Form extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        formData: {
+          name: 'React',
+          birthday: moment(),
+        }
+      }
+      window.aa = this;
     }
 
-    ReactDOM.render(<torenia.Form
-      { ...formConfig }
-    />, document.getElementById('root'));
+    get formConfig() {
+      return {
+        value: this.state.formData,
+        onChange: (name, value) => {
+          this.setState({
+            formData: { ...this.state.formData, [name]: value}
+          });
+        },
+        fields: [
+          { label: '姓名', name: 'name', widget: 'Input' },
+          { label: '模式', name: 'mode', widget: 'AutoComplete', dataSource: ['123', '234', '345'] },
+          { label: '生日', name: 'birthday', widget: 'DatePicker' },
+          { label: '记住我', name: 'remember', widget: 'Checkbox', text: '记住我' },
+          { label: '一个单选', name: 'radio', widget: 'Radio', text: '测试Radio' },
+          { label: '性别', name: 'gender', widget: 'Radio.Group', options: [
+            {label: '男', value: 1},
+            {label: '女', value: 0},
+            {label: '未知', value: 2, disabled: true},
+          ] },
+          { label: '评分', name: 'rate', widget: 'Rate', allowHalf: true, },
+          { label: '状态', name: 'status', widget: 'Select', options: [
+            {label: '已激活', value: 1},
+            {label: '未激活', value: 0},
+          ]},
+          { label: '区间', name: 'range', widget: 'Slider' },
+          { label: '自动续费', name: 'auto', widget: 'Switch' },
+          { label: '时间', name: 'activeTime', widget: 'TimePicker' },
+          { label: '权限', name: 'role', widget: 'Transfer', dataSource: [
+            {key: 1, title: '管理员', description: '管理角色'},
+            {key: 2, title: '操作员', description: '操作角色'},
+            {key: 3, title: '观察员', description: '观察角色'},
+          ], render: item => item.title },
+        ]
+      }
+    }
+
+    change() {
+      const { formData } = this.state;
+      this.setState({
+        formData: {
+          ...formData,
+          radio: !formData.radio
+        },
+      })
+    }
+
+
+    render() {
+      return <React.Fragment>
+        <torenia.Form
+          { ...this.formConfig }
+        />
+        <antd.Button onClick={() => this.change()}>变值</antd.Button>
+      </React.Fragment>
+    }
+  }
+
+  ReactDOM.render(<Form />, document.getElementById('root'));
 
   </script>
 </body>

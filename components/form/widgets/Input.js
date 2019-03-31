@@ -1,19 +1,28 @@
+import React from 'react';
 import { Input as AntInput } from 'antd';
-import React, { Component } from 'react';
+import BaseWidget from './BaseWidget';
 
 const { TextArea: AntTextArea } = AntInput;
 
-class Input extends Component {
+class Input extends BaseWidget {
   render() {
-    const props = { ...this.props };
-    return <AntInput {...props} />;
+    const widgetProps = this.widgetProps();
+    return <AntInput {...widgetProps} />;
   }
 }
 
-class TextArea extends Component {
+class TextArea extends BaseWidget {
   render() {
-    const props = { autosize: { minRows: 3, maxRows: 9 }, ...this.props };
-    return <AntTextArea {...props} />;
+    const { autosize, ...areaProps } = this.widgetProps();
+    const widgetProps = {
+      autosize: {
+        minRows: 3,
+        maxRows: 9,
+        ...autosize,
+      },
+      ...areaProps,
+    };
+    return <AntTextArea {...widgetProps} />;
   }
 }
 

@@ -1,14 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Rate as AntRate } from 'antd';
+import BaseWidget from './BaseWidget';
 
-class Rate extends Component {
-  constructor(props) {
-    super(props);
-  }
-
+class Rate extends BaseWidget {
   render() {
-    const { ...props } = this.props;
-    return <AntRate {...props} />;
+    const widgetProps = this.widgetProps();
+    return <AntRate {...widgetProps} />;
   }
 }
 

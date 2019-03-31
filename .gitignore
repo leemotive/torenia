@@ -3,6 +3,7 @@ lib
 es
 dist
 *.log
+.vscode
 /utils
 /components/index.js
 /components/index.less

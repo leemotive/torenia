@@ -1,19 +1,21 @@
+import React from 'react';
 import { Radio as AntRadio } from 'antd';
-import React, { Component } from 'react';
+import BaseWidget from './BaseWidget';
 
 const { Group: RadioGroup } = AntRadio;
 
-class Radio extends Component {
+class Radio extends BaseWidget {
+  valuePropName = 'checked';
   render() {
-    const { text, ...props } = this.props;
-    return <AntRadio {...props}>{text}</AntRadio>;
+    const { text, ...widgetProps } = this.widgetProps();
+    return <AntRadio {...widgetProps}>{text}</AntRadio>;
   }
 }
 
-class Group extends Component {
+class Group extends BaseWidget {
   render() {
-    const props = { ...this.props };
-    return <RadioGroup {...props} />;
+    const widgetProps = this.widgetProps();
+    return <RadioGroup {...widgetProps} />;
   }
 }
 

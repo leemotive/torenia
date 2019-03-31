@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Input } from 'antd';
 import request from '../../utils/request';
+import BaseWidget from './BaseWidget';
 
 const { Group: InputGroup } = Input;
 
-class Captcha extends Component {
+class Captcha extends BaseWidget {
   static defaultProps = {
     url: '/api/captcha',
     method: 'post',
@@ -13,6 +14,7 @@ class Captcha extends Component {
     captchaHeight: 32,
     className: '',
   };
+
   constructor(props) {
     super(props);
 
@@ -47,13 +49,13 @@ class Captcha extends Component {
 
   render() {
     const {
-      children,
       className,
       resolveUrl,
+      api,
       captchaWidth,
       captchaHeight,
-      ...inputProps
-    } = this.props;
+      ...widgetProps
+    } = this.widgetProps();
 
     return (
       <InputGroup
@@ -61,7 +63,7 @@ class Captcha extends Component {
         compact={true}
         style={{ display: 'flex' }}
       >
-        <Input style={{ flex: 1 }} {...inputProps} />
+        <Input style={{ flex: 1 }} {...widgetProps} />
         <img
           style={{ minWidth: captchaWidth, height: captchaHeight }}
           onClick={this.refreshCaptcha}

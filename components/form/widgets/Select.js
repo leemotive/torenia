@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Select as AntSelect } from 'antd';
+import BaseWidget from './BaseWidget';
 
 const { Option } = AntSelect;
 
-class Select extends Component {
+class Select extends BaseWidget {
   render() {
-    const { options = [], ...others } = this.props;
+    const { options = [], ...widgetProps } = this.widgetProps();
 
     const children = options.map((option, index) => {
       if (React.isValidElement(option)) {
@@ -25,7 +26,7 @@ class Select extends Component {
       }
     });
 
-    return <AntSelect {...others}>{children}</AntSelect>;
+    return <AntSelect {...widgetProps}>{children}</AntSelect>;
   }
 }
 

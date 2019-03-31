@@ -1,19 +1,20 @@
+import React from 'react';
 import { Checkbox as AntCheckbox } from 'antd';
-import React, { Component } from 'react';
+import BaseWidget from './BaseWidget';
 const { Group: CheckboxGroup } = AntCheckbox;
 
-class Checkbox extends Component {
+class Checkbox extends BaseWidget {
+  valuePropName = 'checked';
   render() {
-    const { text, ...props } = this.props;
-    return <AntCheckbox {...props}>{text}</AntCheckbox>;
+    const { text, ...widgetProps } = this.widgetProps();
+    return <AntCheckbox {...widgetProps}>{text}</AntCheckbox>;
   }
 }
-Checkbox.valuePropName = 'checked';
 
-class Group extends Component {
+class Group extends BaseWidget {
   render() {
-    const props = { ...this.props };
-    return <CheckboxGroup {...props} />;
+    const widgetProps = this.widgetProps();
+    return <CheckboxGroup {...widgetProps} />;
   }
 }
 

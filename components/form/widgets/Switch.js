@@ -1,13 +1,13 @@
+import React from 'react';
 import { Switch as AntSwitch } from 'antd';
-import React, { Component } from 'react';
+import BaseWidget from './BaseWidget';
 
-class Switch extends Component {
+class Switch extends BaseWidget {
+  valuePropName = 'checked';
   render() {
-    const { text, ...props } = this.props;
-    return <AntSwitch {...props}>{text}</AntSwitch>;
+    const { text, ...widgetProps } = this.widgetProps();
+    return <AntSwitch {...widgetProps}>{text}</AntSwitch>;
   }
 }
-
-Switch.valuePropName = 'checked';
 
 export default Switch;

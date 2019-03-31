@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Input as AntInput } from 'antd';
+import BaseWidget from './BaseWidget';
 
-class Hidden extends Component {
+class Hidden extends BaseWidget {
   render() {
-    const props = { ...this.props, type: 'hidden' };
-    return <AntInput {...props} />;
+    const widgetProps = this.widgetProps();
+    return <AntInput {...widgetProps} />;
   }
 }
 

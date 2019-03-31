@@ -1,33 +1,32 @@
 import { Cascader as AntCascader } from 'antd';
-import React, { Component } from 'react';
+import React from 'react';
 import city from './city';
+import BaseWidget from './BaseWidget';
 
-class Cascader extends Component {
+class Cascader extends BaseWidget {
   render() {
-    const { ...props } = this.props;
-    props.style = { width: '100%', ...props.style };
-    return <AntCascader {...props} />;
+    const { style, ...cascaderProps } = this.widgetProps();
+    const widgetProps = {
+      style: { width: '100%', ...style },
+      ...cascaderProps,
+    };
+    return <AntCascader {...widgetProps} />;
   }
 }
 
-class Address extends Component {
+class Address extends BaseWidget {
   render() {
-    const { ...props } = this.props;
-    props.options = props.options || city;
-    props.style = { width: '100%', ...props.style };
-    return <AntCascader {...props} />;
+    const { options, style, ...addressProps } = this.widgetProps();
+
+    const widgetProps = {
+      options: options || city,
+      style: { width: '100%', ...style },
+      ...addressProps,
+    };
+
+    return <AntCascader {...widgetProps} />;
   }
 }
-
-Cascader.transform = Address.transform = function(value) {
-  if (Array.isArray(value)) {
-    return value;
-  } else if (typeof value === 'string') {
-    return value.split(' ');
-  } else {
-    return [];
-  }
-};
 
 export default Cascader;
 export { Address };
