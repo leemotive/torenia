@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Form as AntForm, Button } from 'antd';
-import { registerFormWidget } from './widgets';
-import Field from './Field';
+import Field from './fields';
 import FormContext from './context';
 
 const FormItem = AntForm.Item;
@@ -16,8 +15,8 @@ class Form extends Component {
     };
   }
 
-  static getDerivedStateFromProps({ value, fields }, { formData, ...others }) {
-    return { ...others, fields, formData: { ...formData, ...value } };
+  static getDerivedStateFromProps({ value }, { formData, ...others }) {
+    return { ...others, formData: { ...formData, ...value } };
   }
 
   onSubmit = () => {};
@@ -26,24 +25,11 @@ class Form extends Component {
   };
 
   resolveFormItem() {
-    const { fields } = this.state;
-
-    const items = [];
-    for (let field of fields) {
-      if (typeof field === 'function') {
-        const funcField = field(this.props);
-        items.push(React.cloneElement(funcField, { key: items.length }));
-      } else {
-        field.key || (field.key = items.length);
-        items.push(<Field {...field} />);
-      }
-    }
-    return items;
+    return <Field fullname="" />;
   }
 
   resolveWidget = name => {
-    const { fields } = this.state;
-    //const { form } = this.props;
+    const { fields } = this.props;
     const field = fields.find(field => field.name === name);
     return <Field {...field} />;
   };
@@ -107,23 +93,42 @@ class Form extends Component {
       ];
     }
   }
-  onDataChangge = (name, value) => {
+  onDataChangge = ({ name, value }) => {
     const { controlled } = this.state;
-    if (controlled) {
-      this.props?.onChange?.(name, value);
-    } else {
-      const { formData } = this.state;
+    const { formData } = this.state;
+    if (!controlled) {
       formData[name] = value;
       this.setState({
         formData,
       });
     }
+    this.props?.onChange?.(name, value, formData);
   };
   get formContext() {
     const { formData } = this.state;
+    const { fields } = this.props;
+
+    const stack = [...fields, ''];
+    const fieldMap = {};
+    let namePrefix = '';
+    while (stack.length) {
+      const field = stack.pop();
+      if (typeof field === 'string') {
+        namePrefix = field;
+        continue;
+      }
+      const fieldName = `${namePrefix}.${field.name}`.replace(/^\./, '');
+      fieldMap[fieldName] = field;
+
+      if (field.fields) {
+        stack.push(namePrefix, ...field.fields, fieldName);
+      }
+    }
 
     return {
       formData,
+      fields,
+      fieldMap,
       onChange: this.onDataChangge,
     };
   }
@@ -141,8 +146,6 @@ class Form extends Component {
   }
 }
 Form.Item = FormItem;
-
-Form.registerFormWidget = registerFormWidget;
 
 Form.defaultProps = {
   submitText: '提交',

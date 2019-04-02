@@ -34,6 +34,10 @@
         formData: {
           name: 'React',
           birthday: moment(),
+          tasks: [
+            {title: '早饭', content: '鸡蛋豆浆'},
+            {title: '锻炼', content: '健腹轮'}
+          ]
         }
       }
       window.aa = this;
@@ -48,7 +52,16 @@
           });
         },
         fields: [
-          { label: '姓名', name: 'name', widget: 'Input' },
+          { label: '姓名', name: 'name', widget: 'Input', validator: {
+            message: '统一消息',
+            rules: {
+              required: true,
+              maxlength: {
+                value: 4,
+                message: '对象消息长度'
+              },
+            }
+          } },
           { label: '模式', name: 'mode', widget: 'AutoComplete', dataSource: ['123', '234', '345'] },
           { label: '生日', name: 'birthday', widget: 'DatePicker' },
           { label: '记住我', name: 'remember', widget: 'Checkbox', text: '记住我' },
@@ -63,6 +76,12 @@
             {label: '已激活', value: 1},
             {label: '未激活', value: 0},
           ]},
+          {
+            label: '任务列表', name: 'tasks', type: 'array', fields: [
+              { label: '任务名称', name: 'title' },
+              { label: '任务内容', name: 'content' },
+            ]
+          },
           { label: '区间', name: 'range', widget: 'Slider' },
           { label: '自动续费', name: 'auto', widget: 'Switch' },
           { label: '时间', name: 'activeTime', widget: 'TimePicker' },
@@ -71,7 +90,11 @@
             {key: 2, title: '操作员', description: '操作角色'},
             {key: 3, title: '观察员', description: '观察角色'},
           ], render: item => item.title },
-        ]
+        ],
+        onSubmit: () => {
+
+        },
+
       }
     }
 

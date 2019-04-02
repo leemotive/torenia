@@ -54,7 +54,7 @@ gulp.task('build:lib', () => {
 
 gulp.task('build:dist', () => {
   const compile = webpack({
-    mode: 'production',
+    mode: 'development',
     entry: './components/index.js',
     output: {
       filename: 'torenia.min.js',

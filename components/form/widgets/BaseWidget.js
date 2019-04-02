@@ -20,7 +20,7 @@ class BaseWidget extends Component {
 
   onChange = e => {
     const { context, name } = this.props;
-    context.onChange(name, this.getValue(e));
+    context.onChange({ name, value: this.getValue(e) });
   };
 }
 

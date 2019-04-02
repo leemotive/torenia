@@ -38,14 +38,14 @@ const Widgets = {
 
 export default Widgets;
 
-export const resolveWidget = widgetName => {
+export function resolveWidget(widgetName) {
   const names = widgetName.split('.');
   return names.reduce((last, name) => last[name], Widgets);
-};
+}
 
-export const registerFormWidget = function(name, widget) {
+export function registerFormWidget(name, widget) {
   if (Widgets[name]) {
     return;
   }
   Widgets[name] = widget;
-};
+}
