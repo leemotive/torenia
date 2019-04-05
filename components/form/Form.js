@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form as AntForm, Button } from 'antd';
 import Field from './fields';
 import FormContext from './context';
+import utils from '../utils/utils';
 
 const FormItem = AntForm.Item;
 
@@ -25,7 +26,7 @@ class Form extends Component {
   };
 
   resolveFormItem() {
-    return <Field fullname="" />;
+    return <Field key="torenia.form.fields" fullname="" />;
   }
 
   resolveWidget = name => {
@@ -93,16 +94,17 @@ class Form extends Component {
       ];
     }
   }
-  onDataChangge = ({ name, value }) => {
+  onDataChangge = ({ name, fullname, value, newFormData }) => {
     const { controlled } = this.state;
     const { formData } = this.state;
+    newFormData =
+      newFormData || utils.setPathNameDate(formData, fullname, value);
     if (!controlled) {
-      formData[name] = value;
       this.setState({
-        formData,
+        formData: newFormData,
       });
     }
-    this.props?.onChange?.(name, value, formData);
+    this.props?.onChange?.({ name, fullname, value, formData, newFormData });
   };
   get formContext() {
     const { formData } = this.state;

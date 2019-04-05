@@ -1,5 +1,9 @@
 import { Component } from 'react';
+import { Form } from 'antd';
 import { resolveWidget } from '../widgets';
+import utils from '../../utils/utils';
+
+const { Item: FormItem } = Form;
 
 class BaseField extends Component {
   getField() {
@@ -19,25 +23,20 @@ class BaseField extends Component {
       fullname,
     } = this.props;
 
-    const namepath = fullname.split('.');
-    let value = formData;
-    for (let name of namepath) {
-      let match = name.match(/\[(\d+)\]/);
-      if (match) {
-        value = value[match[1]];
-      } else {
-        value = value[name];
-      }
-      if (value == undefined) {
-        break;
-      }
-    }
-    return value;
+    return utils.getPathNameData(formData, fullname);
   }
 
   getWidget() {
     const { widget = 'Input' } = this.getField();
     return typeof widget === 'string' ? resolveWidget(widget) : widget;
+  }
+
+  getFieldItem(children) {
+    const field = this.getField();
+    const { label, itemProps = {} } = field;
+
+    itemProps.label = label;
+    return <FormItem {...itemProps}>{children}</FormItem>;
   }
 }
 

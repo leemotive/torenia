@@ -6,8 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
 
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.5.4/antd.css" rel="stylesheet">
-  <link href="./dist/torenia.min.css" >
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.1/antd.css" rel="stylesheet" />
+  <link href="./dist/torenia.min.css" rel="stylesheet" />
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.js"></script>
 
@@ -15,7 +15,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.4.0/umd/react-dom.development.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.1/prop-types.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/3.5.4/antd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.1/antd.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.0.0-beta.49/polyfill.js"></script>
 
   <script src="./dist/torenia.min.js"></script>
@@ -34,6 +34,10 @@
         formData: {
           name: 'React',
           birthday: moment(),
+          phone: {
+            code: '025',
+            phone: '07680750'
+          },
           tasks: [
             {title: '早饭', content: '鸡蛋豆浆'},
             {title: '锻炼', content: '健腹轮'}
@@ -46,9 +50,9 @@
     get formConfig() {
       return {
         value: this.state.formData,
-        onChange: (name, value) => {
+        onChange: ({newFormData}) => {
           this.setState({
-            formData: { ...this.state.formData, [name]: value}
+            formData: newFormData
           });
         },
         fields: [
@@ -62,6 +66,10 @@
               },
             }
           } },
+          { label: '电话', name: 'phone', fields: [
+            { label: '区号', name: 'code' },
+            { label: '号码', name: 'phone' }
+          ] },
           { label: '模式', name: 'mode', widget: 'AutoComplete', dataSource: ['123', '234', '345'] },
           { label: '生日', name: 'birthday', widget: 'DatePicker' },
           { label: '记住我', name: 'remember', widget: 'Checkbox', text: '记住我' },

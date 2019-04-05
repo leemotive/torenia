@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <button id="debounce">debounce</button>
+  <span id="timer"></span>
+  <script>
+    var $timer = document.getElementById('timer');
+    function update() {
+      $timer.innerText = `计时: ${Date.now()}`;
+      requestAnimationFrame(update);
+    }
+    update();
+  </script>
+  <script>
+    function debounce(fun, delay, {leading = true, trailing = false} = {}) {
+      let timer = 0;
+      return function(...args) {
+        if (timer) {
+          timeout(this, ...args);
+          return;
+        }
+        if (leading) {
+          fun.call(this, ...args);
+          timer = setTimeout(() => {
+            timer = 0;
+          }, delay);
+          return;
+        }
+        timeout(this, ...args);
+      }
+      function timeout(context, ...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          timer = 0;
+          trailing && fun.call(context, ...args);
+        }, delay);
+      }
+
+    }
+  </script>
+
+  <script>
+    const print = debounce(function(...args) {
+      console.log(this, ...args, Date.now());
+    }, 3000, {trailing: true});
+    const context = { name: '哈哈' };
+    document.getElementById('debounce').addEventListener('click', function(){
+      print.call(context, 12);
+    });
+  </script>
+</body>
+</html>

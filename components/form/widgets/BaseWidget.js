@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import utils from '../../utils/utils';
 
 class BaseWidget extends Component {
   getValue = e => {
@@ -8,19 +9,29 @@ class BaseWidget extends Component {
 
   widgetProps() {
     const { valuePropName = 'value' } = this;
-    const { context, name, ...otherProps } = this.props;
+    const { context, name, fullname, ...otherProps } = this.props;
     const { formData } = context;
     const widgetProps = {
-      [valuePropName]: formData[name],
-      onChange: this.onChange,
+      [valuePropName]: utils.getPathNameData(formData, fullname),
       ...otherProps,
+      onChange: this.onChange,
     };
     return widgetProps;
   }
 
+  validate() {
+    /* const { validator } = this.props;
+    const entries = Object.entries(validator); */
+  }
+
   onChange = e => {
-    const { context, name } = this.props;
-    context.onChange({ name, value: this.getValue(e) });
+    const { context, name, fullname, onChange } = this.props;
+    const value = this.getValue(e);
+    this.validate();
+    if (typeof onChange === 'function') {
+      onChange({ name, fullname, value, context });
+    }
+    context.onChange({ name, fullname, value });
   };
 }
 

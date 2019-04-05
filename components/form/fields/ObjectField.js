@@ -3,7 +3,7 @@ import Field from './index';
 
 class ObjectField extends BaseField {
   renderField() {
-    const { fullname } = this.props;
+    const { fullname, noItem } = this.props;
     const { fields } = this.getField();
 
     const items = [];
@@ -11,7 +11,7 @@ class ObjectField extends BaseField {
       const fieldName = `${fullname}.${field.name}`.replace(/^\./, '');
       items.push(<Field fullname={fieldName} key={fieldName} />);
     }
-    return items;
+    return noItem ? items : this.getFieldItem(items);
   }
 
   render() {

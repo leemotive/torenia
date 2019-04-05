@@ -8,7 +8,7 @@ import FormContext from '../context';
 
 class Field extends Component {
   renderField(context) {
-    const { fullname, type } = this.props;
+    const { fullname, type, noItem } = this.props;
     const { fieldMap } = context;
     if (!fullname) {
       return <ObjectField fullname="" context={context} />;
@@ -18,7 +18,13 @@ class Field extends Component {
         if ((type || field.type) === 'array') {
           return <ArrayField context={context} fullname={fullname} />;
         } else {
-          return <ObjectField context={context} fullname={fullname} />;
+          return (
+            <ObjectField
+              context={context}
+              fullname={fullname}
+              noItem={noItem}
+            />
+          );
         }
       } else {
         return <NormalField context={context} fullname={fullname} />;

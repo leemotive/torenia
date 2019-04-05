@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+  <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment.js"></script>
+</head>
+<body>
+  
+  <script>
+    function clone(src) {
+      let wm = new WeakMap();
+      const stack = [];
+      let from = src;
+      let [cloned, copy] = preClone(from);
+      let to = copy;
+      if (!cloned) {
+        stack.push(...Object.getOwnPropertySymbols(from), ...Object.keys(from).reverse(), {from, to: copy});
+
+        while(stack.length) {
+          const key = stack.pop();
+          if (typeof key === 'object') {
+            ({from, to} = key);
+            continue;
+          }
+
+          const fromValue = from[key];
+          ([cloned, copy] = preClone(fromValue));
+          to[key] = copy;
+          if (!cloned) {
+            stack.push({from, to}, ...Object.getOwnPropertySymbols(fromValue), ...Object.keys(fromValue).reverse(), {from: fromValue, to: copy});
+          }
+        }
+      }
+
+      return to;
+
+      function preClone(v) {
+        let copy = wm.get(v);
+        if (copy) {
+          return [true, copy];
+        } else if (typeof v.clone === 'function') {
+          return [true, v.clone()];
+        } else if (Array.isArray(v)) {
+          copy = [];
+          wm.set(v, copy);
+          return [false, copy];
+        } else if (isPlainObject(v)) {
+          copy = {};
+          wm.set(v, copy);
+          return [false, copy];
+        } else if (Object.prototype.toString.call(v) === '[object Date]') {
+          return [true, new Date(v)];
+        } else {
+          return [true, v];
+        }
+      }
+    }
+
+    
+
+    function isPlainObject(value) {
+      if (!value || Object.prototype.toString.call(value) !== '[object Object]') {
+        return false;
+      }
+      
+      const proto = Object.getPrototypeOf(value);
+      if (proto === null) {
+        return true;
+      }
+      const Ctor = Object.prototype.hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+      return typeof Ctor === 'function' && Ctor instanceof Ctor &&
+        Object.prototype.toString.call(Ctor) === '[object Function]';
+    }
+
+  
+  </script>
+</body>
+</html>
