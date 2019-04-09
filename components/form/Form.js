@@ -94,11 +94,23 @@ class Form extends Component {
       ];
     }
   }
+  onValidate = ({ fullname, message, valid }) => {
+    const { errorData = {} } = this.state;
+    let newErrorData;
+    if (valid) {
+      newErrorData = utils.deletePathNameData(errorData, fullname);
+    } else {
+      newErrorData = utils.setPathNameData(errorData, fullname, message);
+    }
+    this.setState({
+      errorData: newErrorData,
+    });
+  };
   onDataChangge = ({ name, fullname, value, newFormData }) => {
     const { controlled } = this.state;
     const { formData } = this.state;
     newFormData =
-      newFormData || utils.setPathNameDate(formData, fullname, value);
+      newFormData || utils.setPathNameData(formData, fullname, value);
     if (!controlled) {
       this.setState({
         formData: newFormData,
@@ -107,8 +119,8 @@ class Form extends Component {
     this.props?.onChange?.({ name, fullname, value, formData, newFormData });
   };
   get formContext() {
-    const { formData } = this.state;
-    const { fields } = this.props;
+    const { formData, errorData } = this.state;
+    const { fields, label } = this.props;
 
     const stack = [...fields, ''];
     const fieldMap = {};
@@ -129,9 +141,12 @@ class Form extends Component {
 
     return {
       formData,
+      errorData,
+      label,
       fields,
       fieldMap,
       onChange: this.onDataChangge,
+      onValidate: this.onValidate,
     };
   }
 

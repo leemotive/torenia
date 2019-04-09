@@ -19,15 +19,9 @@ class BaseWidget extends Component {
     return widgetProps;
   }
 
-  validate() {
-    /* const { validator } = this.props;
-    const entries = Object.entries(validator); */
-  }
-
   onChange = e => {
     const { context, name, fullname, onChange } = this.props;
     const value = this.getValue(e);
-    this.validate();
     if (typeof onChange === 'function') {
       onChange({ name, fullname, value, context });
     }

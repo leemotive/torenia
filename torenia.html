@@ -57,13 +57,17 @@
         },
         fields: [
           { label: '姓名', name: 'name', widget: 'Input', validator: {
-            message: '统一消息',
+            //message: '统一消息',
             rules: {
               required: true,
               maxlength: {
-                value: 4,
-                message: '对象消息长度'
+                params: 4,
               },
+            }
+          } },
+          { label: '身份证', name: 'idcard', validator: {
+            rules: {
+              idcard: true,
             }
           } },
           { label: '电话', name: 'phone', fields: [
@@ -86,18 +90,34 @@
           ]},
           {
             label: '任务列表', name: 'tasks', type: 'array', fields: [
-              { label: '任务名称', name: 'title' },
-              { label: '任务内容', name: 'content' },
+              { label: '任务名称', name: 'title', validator: {
+                rules: {
+                  length: {params: 8, message: '不能太短也不能太长'}
+                }
+              } },
+              { label: '任务内容', name: 'content', validator: {
+                rules: {
+                  email: true,
+                }
+              } },
             ]
           },
-          { label: '区间', name: 'range', widget: 'Slider' },
+          { label: '区间', name: 'range', widget: 'Slider', range: true, validator: {
+            rules: {
+              max: 50
+            }
+          } },
           { label: '自动续费', name: 'auto', widget: 'Switch' },
-          { label: '时间', name: 'activeTime', widget: 'TimePicker' },
+          { label: '时间', name: 'activeTime', widget: 'TimePicker'},
           { label: '权限', name: 'role', widget: 'Transfer', dataSource: [
             {key: 1, title: '管理员', description: '管理角色'},
             {key: 2, title: '操作员', description: '操作角色'},
             {key: 3, title: '观察员', description: '观察角色'},
-          ], render: item => item.title },
+          ], render: item => item.title, validator: {
+            rules: {
+              maxlength: 2
+            }
+          } },
         ],
         onSubmit: () => {
 
@@ -119,13 +139,22 @@
 
     render() {
       return <React.Fragment>
-        <torenia.Form
-          { ...this.formConfig }
-        />
+        <torenia.Form.MessageProvider value={{
+          idcard: '这是什么身份证呀',
+        }}>
+          <torenia.Form
+            { ...this.formConfig }
+          />
+        </torenia.Form.MessageProvider>
+
         <antd.Button onClick={() => this.change()}>变值</antd.Button>
       </React.Fragment>
     }
   }
+
+  torenia.Form.messages({
+    maxlength: '这是个长度最长就是{0}呀'
+  })
 
   ReactDOM.render(<Form />, document.getElementById('root'));
 

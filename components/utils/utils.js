@@ -16,7 +16,26 @@ function getPathNameData(formData, fullname) {
   return clonedeep(value);
 }
 
-function setPathNameDate(formData, fullname, value) {
+function deletePathNameData(formData, fullname) {
+  const namepath = fullname.split('.').filter(n => n);
+  const key = namepath.pop();
+  let value = formData;
+  for (let name of namepath) {
+    let match = name.match(arrayKeyReg);
+    if (match) {
+      name = match[1];
+    }
+    value = value[name];
+    if (value == undefined) {
+      break;
+    }
+  }
+  if (value) {
+    delete value[key];
+  }
+}
+
+function setPathNameData(formData, fullname, value) {
   let cloneFormData = clonedeep(formData);
   const namepath = fullname.split('.');
 
@@ -173,10 +192,21 @@ function debounce(fun, delay, { leading = true, trailing = false } = {}) {
   }
 }
 
+function format(str, params, field) {
+  return (
+    str &&
+    str
+      .replace(/\{([\d+])\}/g, (match, idx) => params[idx])
+      .replace(/\{(\w+)\}/g, (match, key) => field[key])
+  );
+}
+
 export default {
   getPathNameData,
-  setPathNameDate,
+  setPathNameData,
+  deletePathNameData,
   clonedeep,
   isPlainObject,
   debounce,
+  format,
 };

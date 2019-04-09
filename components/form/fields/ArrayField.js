@@ -7,7 +7,7 @@ class ArrayField extends BaseField {
   onChange(value) {
     const { fullname, name, context } = this.props;
     const { formData } = context;
-    const newFormData = utils.setPathNameDate(formData, fullname, value);
+    const newFormData = utils.setPathNameData(formData, fullname, value);
 
     context.onChange({ fullname, name, formData, newFormData });
   }
