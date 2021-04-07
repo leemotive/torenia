@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Button, Icon, Tooltip } from 'antd';
+import cloneDeep from 'lodash.clonedeep';
 import ColumnCheck from './ColumnCheck';
 import Search from './Search';
 import { Consumer } from './context';
@@ -44,7 +45,10 @@ class Header extends Component {
   }
 
   defaultTableOperation(operations) {
-    const { columnCheckConfig } = this.props;
+    const {
+      columnCheckConfig,
+      createConfig: { defaultValue },
+    } = this.props;
     return operations.map(operation => {
       if ('columnCheck' === operation) {
         return <ColumnCheck key="@table/columnCheck" {...columnCheckConfig} />;
@@ -54,7 +58,9 @@ class Header extends Component {
             <Button
               className="tableActionButton"
               onClick={() => {
-                this.props.context._t.showEdit({});
+                this.props.context._t.showEdit(
+                  defaultValue ? cloneDeep(defaultValue) : {},
+                );
               }}
             >
               <Icon type="plus" />

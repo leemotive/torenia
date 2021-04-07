@@ -235,7 +235,14 @@ class Table extends Component {
                 method: 'delete',
                 url: `${options.apiPrefix}/${this.resource}/${record[rowKey]}`,
               }).then(() => {
-                this.query();
+                const { dataSource, pagination } = this.state;
+                if (pagination.current > 1 && dataSource.length === 1) {
+                  // 删除当前页的最后一条数据，查询上一页
+                  this.query(null, { current: pagination.current - 1 });
+                } else {
+                  // 不用更改条件
+                  this.query();
+                }
               });
             }}
           >
@@ -304,6 +311,7 @@ class Table extends Component {
       className,
       searchConfig,
       editConfig = {},
+      createConfig = {},
       checkColumnBehavior,
       columns,
       tableOperation,
@@ -338,6 +346,7 @@ class Table extends Component {
             noOperation={noOperation}
             columnCheckConfig={columnCheckConfig}
             searchConfig={searchConfig}
+            createConfig={createConfig}
           />
           <AntTable
             columns={filterdColumns}
